@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2023",
-    "module": "esnext",
+    "target": "ESNext",
+    "module": "ESNext",
     "lib": ["ES2023", "DOM"],
     "types": ["vite-plus/client"],
     "skipLibCheck": true,
+    "jsx": "react-jsx",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "resolvePackageJsonImports": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
