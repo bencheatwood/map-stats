@@ -15,10 +15,17 @@ export default defineConfig({
     bracketSameLine: false,
     sortPackageJson: true,
     sortImports: {
+      customGroups: [
+        {
+          groupName: "shadcn",
+          elementNamePattern: ["#ui/*", "#components/*", "#lib/*", "#hooks/*"],
+        },
+      ],
       internalPattern: ["@/", "#app/", "#routes/"],
       groups: [
         "value-builtin",
         "value-external",
+        "shadcn",
         ["value-internal", "value-parent", "value-sibling", "value-index"],
         "type-import",
         "unknown",
@@ -148,13 +155,6 @@ export default defineConfig({
   },
 
   plugins: lazyPlugins(() => [react(), tailwindcss()]),
-
-  resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "./src"),
-    },
-  },
-
   build: {
     target: "esnext",
   },
@@ -177,6 +177,12 @@ export default defineConfig({
       preview: {
         command: "vp preview --host 0.0.0.0 --port 2133",
       },
+    },
+  },
+
+  resolve: {
+    alias: {
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
 });

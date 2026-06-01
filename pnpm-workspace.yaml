@@ -1,2 +1,20 @@
 allowBuilds:
+  esbuild: set this to true or false
   msw: true
+  puppeteer: set this to true or false
+
+blockExoticSubdeps: true
+dedupePeers: true
+
+minimumReleaseAge: 2880
+minimumReleaseAgeExclude:
+  - "@voidzero-dev/vite-plus*"
+  - vite-plus
+trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 2880
+
+overrides:
+  vite: "npm:@voidzero-dev/vite-plus-core@latest"
+  vitest: "npm:@voidzero-dev/vite-plus-test@latest"
+
+trustLockfile: true
