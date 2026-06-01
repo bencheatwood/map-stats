@@ -1,6 +1,6 @@
 import { chromium, type Page } from "playwright";
 
-import type { Team } from "./types";
+import type { Team } from "../types";
 
 async function getPage(): Promise<Page> {
   const browser = await chromium.connectOverCDP("http://localhost:9222");

@@ -1,7 +1,7 @@
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true
   msw: true
-  puppeteer: set this to true or false
+  puppeteer: false
 
 blockExoticSubdeps: true
 dedupePeers: true

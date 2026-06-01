@@ -2,7 +2,7 @@ import Bracket from "#app/Bracket/Bracket";
 
 export default function Layout() {
   return (
-    <main className="m-8 flex max-h-dvh w-full">
+    <main className="flex max-h-dvh w-full p-8">
       <Bracket />
     </main>
   );

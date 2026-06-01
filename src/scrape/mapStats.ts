@@ -3,7 +3,7 @@ import { join } from "path";
 
 import { chromium, type Page } from "playwright";
 
-import type { MapStats, Team, TeamMapStats } from "./types.ts";
+import type { MapStats, Team, TeamMapStats } from "../types.ts";
 
 async function getPage(): Promise<Page> {
   const browser = await chromium.connectOverCDP("http://localhost:9222");

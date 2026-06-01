@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
-import type { TeamMapStats, Team, TeamMatchStats, CombinedType, CombinedRank } from "./types";
+import type { TeamMapStats, Team, TeamMatchStats, CombinedType, CombinedRank } from "../types";
 
 const combine = () => {
   const ranks = JSON.parse(

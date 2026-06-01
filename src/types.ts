@@ -54,18 +54,6 @@ export interface CombinedType extends Team {
   valve: number;
   hltv: number;
   icon: string;
-  mapStats: {
-    map: string;
-    wins: number;
-    losses: number;
-    winRate: number;
-    pick: number;
-    ban: number;
-  }[];
-  matchStats: {
-    opponent: string;
-    wins: number;
-    losses: number;
-    matches: string[];
-  }[];
+  mapStats: CombinedMapStats[];
+  matchStats: MatchStats[];
 }

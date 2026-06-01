@@ -8,12 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "#components/ui/table";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "#ui/accordion";
-import { Item, ItemContent, ItemMedia, ItemTitle } from "#ui/item";
 import { Info } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import teamStats from "../../combinedStats.json";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "#ui/accordion";
+import { Item, ItemContent, ItemMedia, ItemTitle } from "#ui/item";
+
+import teamStats from "../../scrape/combinedStats.json";
 
 import type { CombinedType } from "../../types";
 
@@ -35,7 +36,7 @@ function Round1() {
   return (
     <div className="space-y-8">
       <div className="mb-4 text-center text-2xl">Round 1</div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">0-0</div>
         <Matchup topTeam={"GamerLegion"} bottomTeam={"NRG"} />
         <Matchup topTeam={"B8"} bottomTeam={"TYLOO"} />
@@ -54,14 +55,14 @@ function Round2() {
   return (
     <div className="space-y-8">
       <div className="mb-4 text-center text-2xl">Round 2</div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">1-0</div>
         <Matchup topTeam={"GamerLegion"} bottomTeam={"NRG"} />
         <Matchup topTeam={"B8"} bottomTeam={"TYLOO"} />
         <Matchup topTeam={"HEROIC"} bottomTeam={"Sharks"} />
         <Matchup topTeam={"BetBoom"} bottomTeam={"Gaimin Gladiators"} />
       </div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">0-1</div>
         <Matchup topTeam={"BIG"} bottomTeam={"Liquid"} />
         <Matchup topTeam={"M80"} bottomTeam={"Lynn Vision"} />
@@ -76,19 +77,19 @@ function Round3() {
   return (
     <div className="space-y-8">
       <div className="mb-4 text-center text-2xl">Round 3</div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">2-0</div>
         <Matchup topTeam={"GamerLegion"} bottomTeam={"NRG"} />
         <Matchup topTeam={"B8"} bottomTeam={"TYLOO"} />
       </div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">1-1</div>
         <Matchup topTeam={"BIG"} bottomTeam={"Liquid"} />
         <Matchup topTeam={"M80"} bottomTeam={"Lynn Vision"} />
         <Matchup topTeam={"MIBR"} bottomTeam={"THUNDER dOWNUNDER"} />
         <Matchup topTeam={"SINNERS"} bottomTeam={"FlyQuest"} />
       </div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">0-2</div>
         <Matchup topTeam={"BIG"} bottomTeam={"Liquid"} />
         <Matchup topTeam={"M80"} bottomTeam={"Lynn Vision"} />
@@ -100,13 +101,13 @@ function Round4() {
   return (
     <div className="space-y-8">
       <div className="mb-4 text-center text-2xl">Round 4</div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">2-1</div>
         <Matchup topTeam={"GamerLegion"} bottomTeam={"NRG"} />
         <Matchup topTeam={"B8"} bottomTeam={"TYLOO"} />
         <Matchup topTeam={"SINNERS"} bottomTeam={"FlyQuest"} />
       </div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">1-2</div>
         <Matchup topTeam={"BIG"} bottomTeam={"Liquid"} />
         <Matchup topTeam={"M80"} bottomTeam={"Lynn Vision"} />
@@ -120,7 +121,7 @@ function Round5() {
   return (
     <div className="space-y-8">
       <div className="mb-4 text-center text-2xl">Round 5</div>
-      <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-4 rounded-lg border p-2">
         <div className="text-center text-xl">2-2</div>
         <Matchup topTeam={"GamerLegion"} bottomTeam={"NRG"} />
         <Matchup topTeam={"B8"} bottomTeam={"TYLOO"} />

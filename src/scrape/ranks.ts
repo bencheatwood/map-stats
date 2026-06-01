@@ -3,7 +3,7 @@ import { join } from "path";
 
 import { chromium, type Page } from "playwright";
 
-import type { CombinedRank, HLTVRank, Rank } from "./types";
+import type { CombinedRank, HLTVRank, Rank } from "../types";
 
 async function getPage(): Promise<Page> {
   const browser = await chromium.connectOverCDP("http://localhost:9222");

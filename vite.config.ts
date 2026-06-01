@@ -151,6 +151,12 @@ export default defineConfig({
           WorkletGlobalScope: "readonly",
         },
       },
+      {
+        files: ["src/components/ui/*"],
+        rules: {
+          "react/only-export-components": ["off"],
+        },
+      },
     ],
   },
 
