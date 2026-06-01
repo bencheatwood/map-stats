@@ -8,8 +8,9 @@ export default defineConfig({
   staged: {
     "*.{js,ts,tsx}": "",
   },
+  base: "/map-stats/",
   fmt: {
-    ignorePatterns: ["dist/**", "routeTree.gen.ts"],
+    ignorePatterns: ["dist/**"],
     sortTailwindcss: true,
     printWidth: 100,
     bracketSameLine: false,

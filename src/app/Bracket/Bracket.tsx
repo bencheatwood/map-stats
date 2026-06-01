@@ -1,22 +1,15 @@
-import { Button } from "#components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "#components/ui/popover";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "#components/ui/table";
 import { Info } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "#ui/accordion";
+import { Button } from "#ui/button";
 import { Item, ItemContent, ItemMedia, ItemTitle } from "#ui/item";
+import { Popover, PopoverContent, PopoverTrigger } from "#ui/popover";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#ui/table";
 
-import teamStats from "../../scrape/combinedStats.json";
+import teamStats from "@/scrape/combinedStats.json";
 
-import type { CombinedType } from "../../types";
+import type { CombinedType } from "@/types";
 
 const mapNames = ["Ancient", "Anubis", "Dust2", "Inferno", "Mirage", "Nuke", "Overpass"];
 
