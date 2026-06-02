@@ -57,3 +57,15 @@ export interface CombinedType extends Team {
   mapStats: CombinedMapStats[];
   matchStats: MatchStats[];
 }
+
+export type Round = {
+  id: number;
+  matchups: Matchup[];
+};
+
+export type Matchup = {
+  section: "0-0" | "1-0" | "0-1" | "2-0" | "1-1" | "0-2" | "2-1" | "1-2" | "2-2";
+  topTeam: string;
+  bottomTeam: string;
+  winner: string | null;
+};

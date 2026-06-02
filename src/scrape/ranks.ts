@@ -46,7 +46,7 @@ async function getHLTVRanks(page: Page): Promise<HLTVRank[]> {
 
 async function getValveRanks(page: Page): Promise<Rank[]> {
   // Official Valve ranking date used for major seeding
-  await page.goto(`https://www.hltv.org/valve-ranking/teams/2026/april/6`, {
+  await page.goto(`https://www.hltv.org/valve-ranking/teams/2026/may/4`, {
     waitUntil: "domcontentloaded",
   });
 
@@ -75,11 +75,9 @@ async function getValveRanks(page: Page): Promise<Rank[]> {
 async function scrapeRanks() {
   const page = await getPage();
   const hltvRanks = await getHLTVRanks(page);
-  console.log(hltvRanks);
   const valveRanks = await getValveRanks(page);
 
   const ranks: CombinedRank[] = hltvRanks.map((h) => {
-    console.log(h);
     const vRank = valveRanks.filter((v) => v.name === h.name)[0]?.rank ?? "";
     return { name: h.name, icon: h.icon, hltv: h.rank, valve: vRank };
   });

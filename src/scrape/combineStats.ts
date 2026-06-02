@@ -32,7 +32,7 @@ const combine = () => {
           wins: Number(record[0]),
           losses: Number(record[2]),
           winRate: Number(stat.stats["Win rate"].replace("%", "")),
-          pick: Number(stat.stats.pick.replace("%", "")),
+          pick: Number(stat.stats["Pick %"].replace("%", "")),
           ban: Number(stat.stats["Ban %"].replace("%", "")),
         };
       });
