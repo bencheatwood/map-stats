@@ -10,6 +10,7 @@ minimumReleaseAge: 2880
 minimumReleaseAgeExclude:
   - "@voidzero-dev/vite-plus*"
   - vite-plus
+  - pnpm
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 2880
 
@@ -20,6 +21,6 @@ overrides:
 trustLockfile: true
 
 configDependencies:
-  "@pnpm/pacquet": 0.2.2-15
+  "@pnpm/pacquet": 0.2.13
 
 virtualStoreDirMaxLength: 60

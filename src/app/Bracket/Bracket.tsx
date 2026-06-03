@@ -2,9 +2,10 @@ import { Info } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "#ui/accordion";
+import { Badge } from "#ui/badge";
 import { Button } from "#ui/button";
 import { Item, ItemContent, ItemMedia, ItemTitle } from "#ui/item";
-import { Popover, PopoverContent, PopoverTrigger } from "#ui/popover";
+import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "#ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#ui/table";
 
 import teamStats from "@/scrape/combinedStats.json";
@@ -171,14 +172,12 @@ export default function Bracket() {
           const tempMatchups: Matchup[] = [];
           let i = 0;
           while (i < newMatchups.length) {
-            console.log(i);
             if (
               sectionTeams
                 .find((team) => team.team === newMatchups[i].topTeam)!
                 .buchholzOpp.includes(newMatchups[i].bottomTeam) &&
               i < newMatchups.length - 2
             ) {
-              console.log("repeat", newMatchups[i].topTeam, newMatchups[i].bottomTeam);
               tempMatchups.push({ ...newMatchups[i], bottomTeam: newMatchups[i + 1].bottomTeam });
               tempMatchups.push({ ...newMatchups[i + 1], bottomTeam: newMatchups[i].bottomTeam });
               i += 2;
@@ -187,7 +186,6 @@ export default function Bracket() {
               i++;
             }
           }
-          console.log(tempMatchups);
           updatedMatchups.push(tempMatchups);
         }
 
@@ -203,7 +201,7 @@ export default function Bracket() {
   }
 
   return (
-    <div className="grid grid-cols-5 gap-8">
+    <div className="grid grid-cols-6 gap-8">
       {[1, 2, 3, 4, 5].map((id) => (
         <Round
           key={id}
@@ -212,6 +210,7 @@ export default function Bracket() {
           setResults={setResults}
         />
       ))}
+      <FinalResults rounds={rounds} />
     </div>
   );
 }
@@ -226,50 +225,53 @@ function Round({
   setResults: (arg0: number, arg1: string, arg2: string | null) => void;
 }) {
   let sections: ("0-0" | "0-1" | "0-2" | "1-0" | "1-1" | "1-2" | "2-0" | "2-1" | "2-2")[];
-  let shown = false;
+  // Decide on making an empty placeholder bracket or revert to showing rounds only as they are finished
+  let shown = true;
   switch (id) {
     case 1:
       sections = ["0-0"];
-      shown = true;
+      // shown = true;
       break;
     case 2:
       sections = ["1-0", "0-1"];
-      shown = matchups.length === 8;
+      // shown = matchups.length === 8;
       break;
     case 3:
       sections = ["2-0", "1-1", "0-2"];
-      shown = matchups.length === 8;
+      // shown = matchups.length === 8;
       break;
     case 4:
       sections = ["2-1", "1-2"];
-      shown = matchups.length === 6;
+      // shown = matchups.length === 6;
       break;
     default:
       sections = ["2-2"];
-      shown = matchups.length === 3;
+      // shown = matchups.length === 3;
       break;
   }
   return (
     shown && (
-      <div className="space-y-8">
+      <div className="h-full w-full">
         <div className="mb-4 text-center text-2xl">{`Round ${id}`}</div>
-        {sections.map((section) => (
-          <div key={section} className="space-y-4 rounded-lg border p-2">
-            <div className="text-center text-xl">{section}</div>
-            {matchups.map(
-              (matchup, i) =>
-                matchup.section === section && (
-                  <Matchup
-                    key={i}
-                    topTeam={matchup.topTeam}
-                    bottomTeam={matchup.bottomTeam}
-                    id={id}
-                    setResults={setResults}
-                  />
-                ),
-            )}
-          </div>
-        ))}
+        <div className="h-full place-content-center space-y-8">
+          {sections.map((section) => (
+            <div key={section} className="space-y-4 rounded-lg border p-2">
+              <div className="text-center text-xl">{section}</div>
+              {matchups.map(
+                (matchup, i) =>
+                  matchup.section === section && (
+                    <Matchup
+                      key={i}
+                      topTeam={matchup.topTeam}
+                      bottomTeam={matchup.bottomTeam}
+                      id={id}
+                      setResults={setResults}
+                    />
+                  ),
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     )
   );
@@ -323,11 +325,11 @@ function Matchup({
   }, [topTeam, bottomTeam]);
 
   return (
-    <div className="flex space-x-1">
-      <div className="w-fit space-y-1">
+    <div className="flex">
+      <div className="w-full min-w-10.5 space-y-1">
         <Item
           variant="outline"
-          className={`w-50 cursor-pointer select-none ${selectTopTeam ? "bg-green-700/80 hover:bg-green-700/60 " : "bg-accent hover:bg-accent/80 "}`}
+          className={`w-full cursor-pointer flex-nowrap select-none ${selectTopTeam ? "bg-green-700/80 hover:bg-green-700/60 " : "bg-accent hover:bg-accent/80 "}`}
           onClick={() => {
             setSelectTopTeam(!selectTopTeam);
             if (selectBottomTeam) setSelectBottomTeam(false);
@@ -337,13 +339,11 @@ function Matchup({
           <ItemMedia>
             <img src={topStats?.icon} className="size-4" />
           </ItemMedia>
-          <ItemContent>
-            <ItemTitle>{topTeam}</ItemTitle>
-          </ItemContent>
+          <ItemContent className="hidden truncate lg:block">{topTeam}</ItemContent>
         </Item>
         <Item
           variant="outline"
-          className={`cursor-pointer select-none ${selectBottomTeam ? "bg-green-700/80 hover:bg-green-700/60 " : "bg-accent hover:bg-accent/80 "}`}
+          className={`w-full min-w-10.5 cursor-pointer flex-nowrap select-none ${selectBottomTeam ? "bg-green-700/80 hover:bg-green-700/60 " : "bg-accent hover:bg-accent/80 "}`}
           onClick={() => {
             setSelectBottomTeam(!selectBottomTeam);
             if (selectTopTeam) setSelectTopTeam(false);
@@ -353,23 +353,40 @@ function Matchup({
           <ItemMedia>
             <img src={bottomStats?.icon} className="size-4" />
           </ItemMedia>
-          <ItemContent>
-            <ItemTitle>{bottomTeam}</ItemTitle>
-          </ItemContent>
+          <ItemContent className="hidden truncate lg:block">{bottomTeam}</ItemContent>
         </Item>
       </div>
       {topStats && bottomStats && (
         <Popover>
           <PopoverTrigger
-            className="my-auto"
+            className="my-auto ml-2 size-6"
             render={
               <Button variant="ghost">
                 <Info className="size-4" />
               </Button>
             }
-          ></PopoverTrigger>
-          <PopoverContent side="right" className="bg-popover/40 backdrop-blur-2xl">
-            <Accordion className="">
+          />
+          <PopoverContent
+            side="right"
+            align="start"
+            alignOffset={-20}
+            className="bg-popover/60 backdrop-blur-2xl"
+          >
+            <PopoverHeader className="bg-accent rounded-md border py-2">
+              <div className="flex items-center justify-center space-x-3 text-lg font-semibold">
+                <Badge variant="outline">{topStats?.hltv}</Badge>
+                <img src={topStats?.icon} className="size-6" />
+                <span>
+                  {(topStats.matchStats.find((match) => match.opponent === bottomTeam)?.wins ?? 0) +
+                    " - " +
+                    (topStats.matchStats.find((match) => match.opponent === bottomTeam)?.losses ??
+                      0)}
+                </span>
+                <img src={bottomStats?.icon} className="size-6" />
+                <Badge variant="outline">{bottomStats?.hltv}</Badge>
+              </div>
+            </PopoverHeader>
+            <Accordion>
               {mapNames.map((map) => (
                 <MapAccordion key={map} map={map} topStats={topStats} bottomStats={bottomStats} />
               ))}
@@ -480,5 +497,77 @@ function MapAccordion({
         </Table>
       </AccordionContent>
     </AccordionItem>
+  );
+}
+
+function FinalResults({ rounds }: { rounds: Round[] }) {
+  const sections = ["3-0", "3-1", "3-2", "2-3", "1-3", "0-3"];
+
+  const results = stage1Teams.map((team) => {
+    const wins = rounds.reduce((acc, round) => {
+      const matchup = round.matchups.find(
+        (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
+      );
+      if (matchup && matchup.winner === team) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+
+    const losses = rounds.reduce((acc, round) => {
+      const matchup = round.matchups.find(
+        (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
+      );
+      if (matchup && matchup.winner && matchup.winner !== team) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+
+    return {
+      team: team,
+      record: `${wins}-${losses}`,
+      icon: teamStats.find((stat) => stat.name === team)?.icon,
+    };
+  });
+
+  return (
+    <div className="w-full space-y-4">
+      <div className="mb-4 text-center text-2xl">Final Results</div>
+      {sections.map((section) => (
+        <div key={section} className="space-y-1 rounded-lg border p-2">
+          <div className="text-center text-xl">{section}</div>
+          {results.map(
+            (result) =>
+              result.record === section && (
+                <Item
+                  key={result.team}
+                  variant="outline"
+                  className={`w-full min-w-10.5 flex-nowrap select-none ${
+                    section === "3-0"
+                      ? "bg-green-700"
+                      : section === "3-1"
+                        ? "bg-green-800"
+                        : section === "3-2"
+                          ? "bg-green-900"
+                          : section === "2-3"
+                            ? "bg-red-900"
+                            : section === "1-3"
+                              ? "bg-red-800"
+                              : "bg-red-700"
+                  } `}
+                >
+                  <ItemMedia>
+                    <img src={result.icon} className="size-4" />
+                  </ItemMedia>
+                  <ItemContent className="hidden truncate lg:block">
+                    <ItemTitle>{result.team}</ItemTitle>
+                  </ItemContent>
+                </Item>
+              ),
+          )}
+        </div>
+      ))}
+    </div>
   );
 }

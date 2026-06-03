@@ -6,7 +6,7 @@ import { defineConfig, lazyPlugins } from "vite-plus";
 
 export default defineConfig({
   staged: {
-    "*.{js,ts,tsx}": "",
+    "*.{js,ts,tsx}": "vp check --fix",
   },
   base: "/map-stats/",
   fmt: {
