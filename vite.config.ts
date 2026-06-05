@@ -1,7 +1,8 @@
 import path from "path";
 
+import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig, lazyPlugins } from "vite-plus";
 
 export default defineConfig({
@@ -35,7 +36,7 @@ export default defineConfig({
   },
   lint: {
     categories: {
-      correctness: "warn",
+      correctness: "error",
     },
     env: {
       builtin: true,
@@ -65,49 +66,14 @@ export default defineConfig({
           sampleRate: "readonly",
         },
         rules: {
-          "no-array-constructor": "error",
-          "no-case-declarations": "warn",
-          "no-empty": "warn",
-          "no-fallthrough": "error",
-          "no-redeclare": "error",
-          "no-regex-spaces": "error",
-          "no-shadow": "warn",
-          "no-unexpected-multiline": "error",
-          "no-unneeded-ternary": "warn",
-          "no-useless-concat": "warn",
-          "oxc/no-accumulating-spread": "warn",
-          "oxc/no-map-spread": "warn",
-          "prefer-destructuring": "warn",
-          "promise/no-nesting": "warn",
-          "react-compiler/react-compiler": "error",
-          "react/no-array-index-key": "allow",
-          "react/rules-of-hooks": "error",
-          "sort-keys": "warn",
-          "typescript/ban-ts-comment": "error",
-          "typescript/no-empty-object-type": "error",
-          "typescript/no-explicit-any": "error",
-          "typescript/no-misused-promises": "error",
-          "typescript/no-namespace": "error",
-          "typescript/no-require-imports": "error",
-          "typescript/no-unnecessary-boolean-literal-compare": "warn",
-          "typescript/no-unnecessary-type-assertion": "warn",
-          "typescript/no-unnecessary-type-constraint": "warn",
-          "typescript/no-unnecessary-type-conversion": "warn",
-          "typescript/no-unnecessary-type-parameters": "warn",
-          "typescript/no-unsafe-function-type": "error",
-          "typescript/prefer-find": "warn",
-          "typescript/prefer-reduce-type-parameter": "warn",
-          "unicorn/no-array-reverse": "warn",
-          "unicorn/prefer-array-flat-map": "error",
-          "unicorn/prefer-global-this": "warn",
-          "unicorn/prefer-modern-dom-apis": "error",
-          "unicorn/prefer-negative-index": "error",
-          "unicorn/prefer-object-from-entries": "error",
-          "unicorn/prefer-set-has": "warn",
-          "unicorn/prefer-string-starts-ends-with": "error",
-          "unicorn/prefer-ternary": "warn",
-          "unicorn/throw-new-error": "error",
-          "vars-on-top": "warn",
+          "react/exhaustive-deps": "warn",
+          "react/only-export-components": [
+            "error",
+            {
+              allowConstantExport: true,
+            },
+          ],
+          "typescript/no-unsafe-assignment": "warn",
         },
       },
       {
@@ -120,9 +86,60 @@ export default defineConfig({
         },
       },
     ],
-    plugins: ["oxc", "typescript", "unicorn", "react", "vitest"],
+    plugins: ["eslint", "oxc", "typescript", "unicorn", "react", "promise"],
+    rules: {
+      "no-array-constructor": "error",
+      "no-case-declarations": "warn",
+      "no-empty": "warn",
+      "no-fallthrough": "error",
+      "no-redeclare": "error",
+      "no-regex-spaces": "error",
+      "no-shadow": "warn",
+      "no-unexpected-multiline": "error",
+      "no-unneeded-ternary": "warn",
+      "no-useless-concat": "warn",
+      "oxc/no-accumulating-spread": "warn",
+      "oxc/no-map-spread": "warn",
+      "prefer-destructuring": "warn",
+      "promise/no-nesting": "warn",
+      "react-compiler/react-compiler": "error",
+      "react/no-array-index-key": "allow",
+      "react/rules-of-hooks": "error",
+      "sort-keys": "warn",
+      "typescript/ban-ts-comment": "error",
+      "typescript/no-empty-object-type": "error",
+      "typescript/no-explicit-any": "error",
+      "typescript/no-misused-promises": "error",
+      "typescript/no-namespace": "error",
+      "typescript/no-require-imports": "error",
+      "typescript/no-unnecessary-boolean-literal-compare": "warn",
+      "typescript/no-unnecessary-type-assertion": "warn",
+      "typescript/no-unnecessary-type-constraint": "warn",
+      "typescript/no-unnecessary-type-conversion": "warn",
+      "typescript/no-unnecessary-type-parameters": "warn",
+      "typescript/no-unsafe-function-type": "error",
+      "typescript/prefer-find": "warn",
+      "typescript/prefer-reduce-type-parameter": "warn",
+      "unicorn/no-array-reverse": "warn",
+      "unicorn/prefer-array-flat-map": "error",
+      "unicorn/prefer-global-this": "warn",
+      "unicorn/prefer-modern-dom-apis": "error",
+      "unicorn/prefer-negative-index": "error",
+      "unicorn/prefer-object-from-entries": "error",
+      "unicorn/prefer-set-has": "warn",
+      "unicorn/prefer-string-starts-ends-with": "error",
+      "unicorn/prefer-ternary": "warn",
+      "unicorn/throw-new-error": "error",
+      "vars-on-top": "warn",
+    },
   },
-  plugins: lazyPlugins(() => [react(), tailwindcss()]),
+  plugins: lazyPlugins(() => [
+    babel({
+      presets: [reactCompilerPreset()],
+    }),
+    react(),
+    tailwindcss(),
+  ]),
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./src"),
@@ -136,12 +153,6 @@ export default defineConfig({
       },
       check: {
         command: "vp check --fix",
-      },
-      dev: {
-        command: "vp dev --host 0.0.0.0 --port 3333",
-      },
-      preview: {
-        command: "vp preview --host 0.0.0.0 --port 2133",
       },
       tsgo: {
         command: "tsgo -b",
