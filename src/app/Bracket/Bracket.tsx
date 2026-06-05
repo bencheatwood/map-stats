@@ -201,7 +201,7 @@ export default function Bracket() {
   }
 
   return (
-    <div className="grid grid-cols-6 gap-8">
+    <div className="grid grid-cols-6 gap-4 md:gap-8">
       {[1, 2, 3, 4, 5].map((id) => (
         <Round
           key={id}
@@ -251,8 +251,8 @@ function Round({
   }
   return (
     shown && (
-      <div className="h-full w-full">
-        <div className="mb-4 text-center text-2xl">{`Round ${id}`}</div>
+      <div className="h-full w-full min-w-15">
+        <div className="mb-4 text-center text-lg md:text-2xl">{`Round ${id}`}</div>
         <div className="h-full place-content-center space-y-8">
           {sections.map((section) => (
             <div key={section} className="space-y-4 rounded-lg border p-2">
@@ -325,7 +325,7 @@ function Matchup({
   }, [topTeam, bottomTeam]);
 
   return (
-    <div className="flex">
+    <div className="md:flex">
       <div className="w-full min-w-10.5 space-y-1">
         <Item
           variant="outline"
@@ -359,9 +359,9 @@ function Matchup({
       {topStats && bottomStats && (
         <Popover>
           <PopoverTrigger
-            className="my-auto ml-2 size-6"
+            className="my-1 h-9.5 w-full md:my-auto md:ml-2 md:w-6"
             render={
-              <Button variant="ghost">
+              <Button variant="ghost" className="border-accent border py-4 md:border-0 md:py-0">
                 <Info className="size-4" />
               </Button>
             }
@@ -532,10 +532,25 @@ function FinalResults({ rounds }: { rounds: Round[] }) {
   });
 
   return (
-    <div className="w-full space-y-4">
-      <div className="mb-4 text-center text-2xl">Final Results</div>
+    <div className="h-full w-full space-y-8">
+      <div className="mb-4 text-center text-lg md:text-2xl">Final Results</div>
       {sections.map((section) => (
-        <div key={section} className="space-y-1 rounded-lg border p-2">
+        <div
+          key={section}
+          className={`min-w-15 space-y-1 rounded-lg border p-2 ${
+            section === "3-0"
+              ? "border-green-700"
+              : section === "3-1"
+                ? "border-green-800"
+                : section === "3-2"
+                  ? "border-green-900"
+                  : section === "2-3"
+                    ? "border-red-900"
+                    : section === "1-3"
+                      ? "border-red-800"
+                      : "border-red-700"
+          }`}
+        >
           <div className="text-center text-xl">{section}</div>
           {results.map(
             (result) =>
@@ -555,7 +570,7 @@ function FinalResults({ rounds }: { rounds: Round[] }) {
                             : section === "1-3"
                               ? "bg-red-800"
                               : "bg-red-700"
-                  } `}
+                  }`}
                 >
                   <ItemMedia>
                     <img src={result.icon} className="size-4" />
