@@ -8,10 +8,7 @@ import type { MatchStats, Team, TeamMatchStats } from "../types.ts";
 async function getPage(): Promise<Page> {
   const browser = await chromium.connectOverCDP("http://localhost:9222");
 
-  const context = browser.contexts()[0];
-  const page = context.pages()[0];
-
-  return page;
+  return browser.contexts()[0].pages()[0];
 }
 
 export async function getResults(page: Page, team: Team): Promise<MatchStats[]> {
@@ -42,26 +39,25 @@ export async function getResults(page: Page, team: Team): Promise<MatchStats[]> 
       if (results.find((result) => result.opponent === oppName)) {
         results = results.map((result) => {
           if (result.opponent === oppName) {
-            if (won)
-              return {
-                ...result,
-                wins: result.wins + 1,
-                matches: [...result.matches, `${spans[0]?.textContent}-${spans[1]?.textContent}`],
-              };
-            else
-              return {
-                ...result,
-                losses: result.losses + 1,
-                matches: [...result.matches, `${spans[0]?.textContent}-${spans[1]?.textContent}`],
-              };
+            return won
+              ? {
+                  ...result,
+                  matches: [...result.matches, `${spans[0]?.textContent}-${spans[1]?.textContent}`],
+                  wins: result.wins + 1,
+                }
+              : {
+                  ...result,
+                  losses: result.losses + 1,
+                  matches: [...result.matches, `${spans[0]?.textContent}-${spans[1]?.textContent}`],
+                };
           } else return result;
         });
       } else {
         results.push({
-          opponent: oppName,
-          wins: won ? 1 : 0,
           losses: won ? 0 : 1,
           matches: [`${spans[0]?.textContent}-${spans[1]?.textContent}`],
+          opponent: oppName,
+          wins: won ? 1 : 0,
         });
       }
     }

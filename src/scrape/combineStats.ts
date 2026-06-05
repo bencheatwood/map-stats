@@ -28,24 +28,24 @@ const combine = () => {
         const record = stat.stats["Wins / draws / losses"].split(" / ");
 
         return {
-          map: stat.map,
-          wins: Number(record[0]),
-          losses: Number(record[2]),
-          winRate: Number(stat.stats["Win rate"].replace("%", "")),
-          pick: Number(stat.stats["Pick %"].replace("%", "")),
           ban: Number(stat.stats["Ban %"].replace("%", "")),
+          losses: Number(record[2]),
+          map: stat.map,
+          pick: Number(stat.stats["Pick %"].replace("%", "")),
+          winRate: Number(stat.stats["Win rate"].replace("%", "")),
+          wins: Number(record[0]),
         };
       });
     const matchStats = teamMatchStats.find((teamMatch) => team.name === teamMatch.name)!.stats;
 
     return {
-      id: team.id,
-      name: name,
       hltv: hltv,
-      valve: valve,
       icon: icon,
+      id: team.id,
       mapStats: mapStats,
       matchStats: matchStats,
+      name: name,
+      valve: valve,
     };
   });
 

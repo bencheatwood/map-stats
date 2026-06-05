@@ -40,11 +40,11 @@ export default function Bracket() {
   const [rounds, setRounds] = useState<Round[]>([
     {
       id: 1,
-      matchups: stage1Teams.reduce((acc, team, i) => {
+      matchups: stage1Teams.reduce<Matchup[]>((acc, team, i) => {
         if (i < 8)
-          acc.push({ section: "0-0", topTeam: team, bottomTeam: stage1Teams[i + 8], winner: null });
+          acc.push({ bottomTeam: stage1Teams[i + 8], section: "0-0", topTeam: team, winner: null });
         return acc;
-      }, [] as Matchup[]),
+      }, []),
     },
     {
       id: 2,
@@ -97,41 +97,41 @@ export default function Bracket() {
         }
 
         const prevResults = stage1Teams.map((team) => {
-          const wins = updateRounds.reduce((acc, round) => {
-            const matchup = round.matchups.find(
+          const wins = updateRounds.reduce((acc, updateRound) => {
+            const match = updateRound.matchups.find(
               (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
             );
-            if (round.id <= id && matchup && matchup.winner === team) {
+            if (updateRound.id <= id && match && match.winner === team) {
               return acc + 1;
             }
             return acc;
           }, 0);
 
-          const losses = updateRounds.reduce((acc, round) => {
-            const matchup = round.matchups.find(
+          const losses = updateRounds.reduce((acc, updateRound) => {
+            const match = updateRound.matchups.find(
               (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
             );
-            if (round.id <= id && matchup && matchup.winner && matchup.winner !== team) {
+            if (updateRound.id <= id && match && match.winner && match.winner !== team) {
               return acc + 1;
             }
             return acc;
           }, 0);
 
-          const buchholzOpp = updateRounds.reduce((acc, round) => {
-            const matchup = round.matchups.find(
+          const buchholzOpp = updateRounds.reduce<string[]>((acc, updateRound) => {
+            const match = updateRound.matchups.find(
               (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
             );
-            if (round.id <= id && matchup && matchup.winner) {
-              acc.push(matchup!.topTeam === team ? matchup!.bottomTeam : matchup!.topTeam);
+            if (updateRound.id <= id && match && match.winner) {
+              acc.push(match.topTeam === team ? match.bottomTeam : match.topTeam);
             }
             return acc;
-          }, [] as string[]);
+          }, []);
 
           return {
-            team: team,
-            record: `${wins}-${losses}`,
-            buchholzSelf: wins - losses,
             buchholzOpp: buchholzOpp,
+            buchholzSelf: wins - losses,
+            record: `${wins}-${losses}`,
+            team: team,
           };
         });
 
@@ -157,17 +157,17 @@ export default function Bracket() {
               return buchDiff || valveDiff;
             });
 
-          const newMatchups = sectionTeams.reduce((acc, team, i) => {
+          const newMatchups = sectionTeams.reduce<Matchup[]>((acc, team, i) => {
             if (i < Math.floor(sectionTeams.length / 2)) {
               acc.push({
+                bottomTeam: sectionTeams[sectionTeams.length - (i + 1)].team,
                 section: section,
                 topTeam: team.team,
-                bottomTeam: sectionTeams[sectionTeams.length - (i + 1)].team,
                 winner: null,
               });
             }
             return acc;
-          }, [] as Matchup[]);
+          }, []);
 
           const tempMatchups: Matchup[] = [];
           let i = 0;
@@ -301,22 +301,22 @@ function Matchup({
     for (const mapName of mapNames) {
       if (!tempTopStats.mapStats.find((stat) => stat.map === mapName)) {
         tempTopStats.mapStats.push({
-          map: mapName,
-          wins: 0,
-          losses: 0,
-          winRate: 0,
-          pick: 0,
           ban: 100,
+          losses: 0,
+          map: mapName,
+          pick: 0,
+          winRate: 0,
+          wins: 0,
         });
       }
       if (!tempBottomStats.mapStats.find((stat) => stat.map === mapName)) {
         tempBottomStats.mapStats.push({
-          map: mapName,
-          wins: 0,
-          losses: 0,
-          winRate: 0,
-          pick: 0,
           ban: 100,
+          losses: 0,
+          map: mapName,
+          pick: 0,
+          winRate: 0,
+          wins: 0,
         });
       }
     }
@@ -505,29 +505,29 @@ function FinalResults({ rounds }: { rounds: Round[] }) {
 
   const results = stage1Teams.map((team) => {
     const wins = rounds.reduce((acc, round) => {
-      const matchup = round.matchups.find(
+      const match = round.matchups.find(
         (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
       );
-      if (matchup && matchup.winner === team) {
+      if (match && match.winner === team) {
         return acc + 1;
       }
       return acc;
     }, 0);
 
     const losses = rounds.reduce((acc, round) => {
-      const matchup = round.matchups.find(
+      const match = round.matchups.find(
         (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
       );
-      if (matchup && matchup.winner && matchup.winner !== team) {
+      if (match && match.winner && match.winner !== team) {
         return acc + 1;
       }
       return acc;
     }, 0);
 
     return {
-      team: team,
-      record: `${wins}-${losses}`,
       icon: teamStats.find((stat) => stat.name === team)?.icon,
+      record: `${wins}-${losses}`,
+      team: team,
     };
   });
 

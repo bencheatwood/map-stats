@@ -8,10 +8,7 @@ import type { MapStats, Team, TeamMapStats } from "../types.ts";
 async function getPage(): Promise<Page> {
   const browser = await chromium.connectOverCDP("http://localhost:9222");
 
-  const context = browser.contexts()[0];
-  const page = context.pages()[0];
-
-  return page;
+  return browser.contexts()[0].pages()[0];
 }
 
 export async function getMapOverview(page: Page, team: Team): Promise<MapStats[]> {

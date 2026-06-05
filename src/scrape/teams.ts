@@ -5,10 +5,7 @@ import type { Team } from "../types";
 async function getPage(): Promise<Page> {
   const browser = await chromium.connectOverCDP("http://localhost:9222");
 
-  const context = browser.contexts()[0];
-  const page = context.pages()[0];
-
-  return page;
+  return browser.contexts()[0].pages()[0];
 }
 
 async function getMajorTeamIds(page: Page, url: string): Promise<(Team | string)[]> {
@@ -32,9 +29,9 @@ async function getMajorTeamIds(page: Page, url: string): Promise<(Team | string)
 }
 
 async function scrapeTeams() {
-  const url = "https://www.hltv.org/events/8301/iem-cologne-major-2026";
   // https://www.hltv.org/events/9028/iem-cologne-major-2026-stage-1
   // https://www.hltv.org/events/9029/iem-cologne-major-2026-stage-2
+  const url = "https://www.hltv.org/events/8301/iem-cologne-major-2026";
 
   const page = await getPage();
 

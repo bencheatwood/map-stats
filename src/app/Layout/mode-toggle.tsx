@@ -8,7 +8,7 @@ export function ModeToggle() {
   const { theme, setTheme } = useTheme();
 
   function changeTheme() {
-    const root = window.document.documentElement;
+    const root = globalThis.document.documentElement;
 
     if (root.classList.contains("dark")) setTheme("light");
     else setTheme("dark");
