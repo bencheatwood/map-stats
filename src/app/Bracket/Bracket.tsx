@@ -39,30 +39,109 @@ export default function Bracket() {
       id: 1,
       matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
         if (i < 8)
-          acc.push({ bottomTeam: stage2Teams[i + 8], section: "0-0", topTeam: team, winner: null });
+          acc.push({
+            bottomTeam: stage2Teams[i + 8],
+            section: "0-0",
+            topTeam: team,
+            winner: team,
+          });
         return acc;
       }, []),
     },
     {
       id: 2,
-      matchups: [] as Matchup[],
+      matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
+        if (i < 4)
+          acc.push({
+            bottomTeam: stage2Teams[7 - i],
+            section: "1-0",
+            topTeam: team,
+            winner: team,
+          });
+        if (i >= 8 && i < 12)
+          acc.push({
+            bottomTeam: stage2Teams[15 - i + 8],
+            section: "0-1",
+            topTeam: team,
+            winner: team,
+          });
+        return acc;
+      }, []),
     },
     {
       id: 3,
-      matchups: [] as Matchup[],
+      matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
+        if (i < 2)
+          acc.push({
+            bottomTeam: stage2Teams[3 - i],
+            section: "2-0",
+            topTeam: team,
+            winner: team,
+          });
+        if (i >= 4 && i < 8)
+          acc.push({
+            bottomTeam: stage2Teams[11 - i + 4],
+            section: "1-1",
+            topTeam: team,
+            winner: team,
+          });
+        if (i >= 12 && i < 14)
+          acc.push({
+            bottomTeam: stage2Teams[15 - i + 12],
+            section: "0-2",
+            topTeam: team,
+            winner: team,
+          });
+        return acc;
+      }, []),
     },
     {
       id: 4,
-      matchups: [] as Matchup[],
+      matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
+        if (i >= 2 && i < 5)
+          acc.push({
+            bottomTeam: stage2Teams[7 - i + 2],
+            section: "2-1",
+            topTeam: team,
+            winner: team,
+          });
+        if (i >= 8 && i < 11)
+          acc.push({
+            bottomTeam: stage2Teams[13 - i + 8],
+            section: "1-2",
+            topTeam: team,
+            winner: team,
+          });
+        return acc;
+      }, []),
     },
     {
       id: 5,
-      matchups: [] as Matchup[],
+      matchups: [
+        {
+          bottomTeam: stage2Teams[9],
+          section: "2-2",
+          topTeam: stage2Teams[5],
+          winner: stage2Teams[5],
+        },
+        {
+          bottomTeam: stage2Teams[8],
+          section: "2-2",
+          topTeam: stage2Teams[6],
+          winner: stage2Teams[6],
+        },
+        {
+          bottomTeam: stage2Teams[10],
+          section: "2-2",
+          topTeam: stage2Teams[7],
+          winner: stage2Teams[7],
+        },
+      ],
     },
   ]);
 
   // TO-DO: Reset results for following round of match result changed when more than two rounds are shown
-  function setResults(id: number, topTeam: string, winner: string | null) {
+  function setResults(id: number, topTeam: string, winner: string) {
     const updateRounds: Round[] = rounds.map((round) => {
       if (round.id === id) {
         return {
@@ -155,33 +234,75 @@ export default function Bracket() {
               return buchDiff || seedDiff;
             });
 
-          let bottomTeams: string[] = [];
-          const newMatchups = sectionTeams.map((team, i) => {
-            if (i < Math.floor(sectionTeams.length / 2)) {
+          const newMatchups = sectionTeams
+            .filter((_, i) => i < Math.floor(sectionTeams.length / 2))
+            .map((team) => {
               return {
                 bottomTeam: "",
                 section: section,
                 topTeam: team.team,
-                winner: null,
+                winner: team.team,
               };
-            } else bottomTeams.push(team.team);
-          });
-          bottomTeams.reverse();
+            });
+
+          const bottomTeams = new Set(
+            sectionTeams
+              .filter((_, i) => i >= Math.floor(sectionTeams.length / 2))
+              .map((team) => team.team)
+              .toReversed(),
+          );
+
           const tempMatchups: Matchup[] = [];
-          for (const newMatchup of newMatchups) {
-            if (!newMatchup) continue;
-            const newBottomTeam = bottomTeams.find(
-              (bottomTeam) =>
+          newMatchups.forEach((newMatchup) => {
+            let returnBottomTeam = null;
+            for (const bottomTeam of bottomTeams) {
+              if (
                 !sectionTeams
                   .find((team) => team.team === newMatchup.topTeam)!
-                  .buchholzOpp.includes(bottomTeam),
-            );
-            tempMatchups.push({
-              ...newMatchup,
-              bottomTeam: newBottomTeam!,
-            });
-            bottomTeams = bottomTeams.filter((bottomTeam) => bottomTeam !== newBottomTeam);
-          }
+                  .buchholzOpp.includes(bottomTeam)
+              ) {
+                bottomTeams.delete(bottomTeam);
+                returnBottomTeam = bottomTeam;
+                break;
+              } else console.log(newMatchup.topTeam, " - skipped", bottomTeam);
+            }
+            if (!returnBottomTeam) {
+              console.log(newMatchup.topTeam, " - no available teams");
+              for (const tempMatchup of tempMatchups.toReversed()) {
+                if (
+                  !sectionTeams
+                    .find((team) => team.team === newMatchup.topTeam)!
+                    .buchholzOpp.includes(tempMatchup.bottomTeam)
+                ) {
+                  console.log(
+                    newMatchup.topTeam,
+                    " - takes",
+                    tempMatchup.bottomTeam,
+                    "from",
+                    tempMatchup.topTeam,
+                  );
+                  returnBottomTeam = tempMatchup.bottomTeam;
+                  for (const bottomTeam of bottomTeams) {
+                    if (
+                      !sectionTeams
+                        .find((team) => team.team === tempMatchup.topTeam)!
+                        .buchholzOpp.includes(bottomTeam)
+                    ) {
+                      console.log(tempMatchup.topTeam, " - takes", bottomTeam);
+                      bottomTeams.delete(bottomTeam);
+                      Object.assign(tempMatchup, {
+                        bottomTeam: bottomTeam,
+                      });
+                      break;
+                    } else console.log(newMatchup.topTeam, " - skipped", bottomTeam);
+                  }
+                  break;
+                }
+              }
+            }
+            tempMatchups.push({ ...newMatchup, bottomTeam: returnBottomTeam ?? "" });
+            return;
+          });
           updatedMatchups.push(tempMatchups);
         }
 
@@ -218,58 +339,49 @@ function Round({
 }: {
   id: number;
   matchups: Matchup[];
-  setResults: (arg0: number, arg1: string, arg2: string | null) => void;
+  setResults: (arg0: number, arg1: string, arg2: string) => void;
 }) {
   let sections: ("0-0" | "0-1" | "0-2" | "1-0" | "1-1" | "1-2" | "2-0" | "2-1" | "2-2")[];
-  // TO-DO: Decide on making an empty placeholder bracket or revert to showing rounds only as they are finished
-  let shown = true;
   switch (id) {
     case 1:
       sections = ["0-0"];
-      // shown = true;
       break;
     case 2:
       sections = ["1-0", "0-1"];
-      // shown = matchups.length === 8;
       break;
     case 3:
       sections = ["2-0", "1-1", "0-2"];
-      // shown = matchups.length === 8;
       break;
     case 4:
       sections = ["2-1", "1-2"];
-      // shown = matchups.length === 6;
       break;
     default:
       sections = ["2-2"];
-      // shown = matchups.length === 3;
       break;
   }
   return (
-    shown && (
-      <div className="h-full w-full min-w-15">
-        <div className="mb-4 text-center text-lg md:text-2xl">{`Round ${id}`}</div>
-        <div className="h-full place-content-center space-y-8">
-          {sections.map((section) => (
-            <div key={section} className="space-y-4 rounded-lg border p-2">
-              <div className="text-center text-xl">{section}</div>
-              {matchups.map(
-                (matchup, i) =>
-                  matchup.section === section && (
-                    <Matchup
-                      key={i}
-                      topTeam={matchup.topTeam}
-                      bottomTeam={matchup.bottomTeam}
-                      id={id}
-                      setResults={setResults}
-                    />
-                  ),
-              )}
-            </div>
-          ))}
-        </div>
+    <div className="h-full w-full min-w-15">
+      <div className="mb-4 text-center text-lg md:text-2xl">{`Round ${id}`}</div>
+      <div className="h-full place-content-center space-y-8">
+        {sections.map((section) => (
+          <div key={section} className="space-y-4 rounded-lg border p-2">
+            <div className="text-center text-xl">{section}</div>
+            {matchups.map(
+              (matchup, i) =>
+                matchup.section === section && (
+                  <Matchup
+                    key={i}
+                    topTeam={matchup.topTeam}
+                    bottomTeam={matchup.bottomTeam}
+                    id={id}
+                    setResults={setResults}
+                  />
+                ),
+            )}
+          </div>
+        ))}
       </div>
-    )
+    </div>
   );
 }
 
@@ -282,11 +394,11 @@ function Matchup({
   topTeam: string;
   bottomTeam: string;
   id: number;
-  setResults: (arg0: number, arg1: string, arg2: string | null) => void;
+  setResults: (arg0: number, arg1: string, arg2: string) => void;
 }) {
   const [topStats, setTopStats] = useState<CombinedType | undefined>();
   const [bottomStats, setBottomStats] = useState<CombinedType | undefined>();
-  const [selectTopTeam, setSelectTopTeam] = useState<boolean>(false);
+  const [selectTopTeam, setSelectTopTeam] = useState<boolean>(true);
   const [selectBottomTeam, setSelectBottomTeam] = useState<boolean>(false);
 
   useEffect(() => {
@@ -327,9 +439,11 @@ function Matchup({
           variant="outline"
           className={`w-full cursor-pointer flex-nowrap select-none ${selectTopTeam ? "bg-green-700/80 hover:bg-green-700/60 " : "bg-accent hover:bg-accent/80 "}`}
           onClick={() => {
-            setSelectTopTeam(!selectTopTeam);
+            if (!selectTopTeam) {
+              setSelectTopTeam(true);
+              setResults(id, topTeam, topTeam);
+            }
             if (selectBottomTeam) setSelectBottomTeam(false);
-            setResults(id, topTeam, !selectTopTeam ? topTeam : null);
           }}
         >
           <ItemMedia>
@@ -341,9 +455,11 @@ function Matchup({
           variant="outline"
           className={`w-full min-w-10.5 cursor-pointer flex-nowrap select-none ${selectBottomTeam ? "bg-green-700/80 hover:bg-green-700/60 " : "bg-accent hover:bg-accent/80 "}`}
           onClick={() => {
-            setSelectBottomTeam(!selectBottomTeam);
+            if (!selectBottomTeam) {
+              setSelectBottomTeam(true);
+              setResults(id, topTeam, bottomTeam);
+            }
             if (selectTopTeam) setSelectTopTeam(false);
-            setResults(id, topTeam, !selectBottomTeam ? bottomTeam : null);
           }}
         >
           <ItemMedia>
@@ -362,12 +478,7 @@ function Matchup({
               </Button>
             }
           />
-          <PopoverContent
-            side="right"
-            align="start"
-            alignOffset={-20}
-            className="bg-popover/60 backdrop-blur-2xl"
-          >
+          <PopoverContent side="right" className="bg-popover/60 backdrop-blur-2xl">
             <PopoverHeader className="bg-accent rounded-md border py-2">
               <div className="flex items-center justify-center space-x-3 text-lg font-semibold">
                 <Badge variant="outline">{topStats?.hltv}</Badge>
