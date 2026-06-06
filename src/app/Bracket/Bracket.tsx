@@ -13,36 +13,33 @@ import teamStats from "@/scrape/combinedStats.json";
 import type { CombinedType, Matchup, Round } from "@/types";
 
 const mapNames = ["Ancient", "Anubis", "Dust2", "Inferno", "Mirage", "Nuke", "Overpass"];
-const stage1Teams = [
-  "GamerLegion",
-  "NRG",
-  "B8",
-  "TYLOO",
-  "HEROIC",
-  "Sharks",
-  "BetBoom",
-  "Gaimin Gladiators",
-  "BIG",
-  "Liquid",
-  "M80",
-  "Lynn Vision",
-  "MIBR",
-  "THUNDER dOWNUNDER",
-  "SINNERS",
-  "FlyQuest",
-].sort(
-  (a, b) =>
-    teamStats.find((team) => team.name === a)!.valve -
-    teamStats.find((team) => team.name === b)!.valve,
+
+// TO-DO:
+// - Make stage a parameter chosen from tabs
+// - Carry over Buchholz seeding to automatically sort final results
+//     - These are manually sorted by Stage 1 results
+const stage1Teams = ["B8", "BetBoom", "GamerLegion", "M80", "MIBR", "TYLOO", "BIG", "FlyQuest"];
+
+const stage2Teams = ["Spirit", "Astralis", "G2", "FUT", "Legacy", "paiN", "9z", "Monte"]
+  .sort(
+    (a, b) =>
+      teamStats.find((team) => team.name === a)!.valve -
+      teamStats.find((team) => team.name === b)!.valve,
+  )
+  .concat(stage1Teams);
+
+// Append seeding (this is VRS ranking in Stage 1)
+const adjustedTeamStats = stage2Teams.map((team, i) =>
+  Object.assign(teamStats.find((teamStat) => teamStat.name === team)!, { seed: i + 1 }),
 );
 
 export default function Bracket() {
   const [rounds, setRounds] = useState<Round[]>([
     {
       id: 1,
-      matchups: stage1Teams.reduce<Matchup[]>((acc, team, i) => {
+      matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
         if (i < 8)
-          acc.push({ bottomTeam: stage1Teams[i + 8], section: "0-0", topTeam: team, winner: null });
+          acc.push({ bottomTeam: stage2Teams[i + 8], section: "0-0", topTeam: team, winner: null });
         return acc;
       }, []),
     },
@@ -64,6 +61,7 @@ export default function Bracket() {
     },
   ]);
 
+  // TO-DO: Reset results for following round of match result changed when more than two rounds are shown
   function setResults(id: number, topTeam: string, winner: string | null) {
     const updateRounds: Round[] = rounds.map((round) => {
       if (round.id === id) {
@@ -96,7 +94,7 @@ export default function Bracket() {
             break;
         }
 
-        const prevResults = stage1Teams.map((team) => {
+        const prevResults = stage2Teams.map((team) => {
           const wins = updateRounds.reduce((acc, updateRound) => {
             const match = updateRound.matchups.find(
               (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
@@ -140,9 +138,9 @@ export default function Bracket() {
           const sectionTeams = prevResults
             .filter((result) => result.record === section)
             .sort((a, b) => {
-              const valveDiff =
-                teamStats.find((team) => team.name === a.team)!.valve -
-                teamStats.find((team) => team.name === b.team)!.valve;
+              const seedDiff =
+                adjustedTeamStats.find((team) => team.name === a.team)!.seed -
+                adjustedTeamStats.find((team) => team.name === b.team)!.seed;
 
               const buchDiff =
                 prevResults.reduce((acc, team) => {
@@ -154,37 +152,35 @@ export default function Bracket() {
                   return acc;
                 }, 0);
 
-              return buchDiff || valveDiff;
+              return buchDiff || seedDiff;
             });
 
-          const newMatchups = sectionTeams.reduce<Matchup[]>((acc, team, i) => {
+          let bottomTeams: string[] = [];
+          const newMatchups = sectionTeams.map((team, i) => {
             if (i < Math.floor(sectionTeams.length / 2)) {
-              acc.push({
-                bottomTeam: sectionTeams[sectionTeams.length - (i + 1)].team,
+              return {
+                bottomTeam: "",
                 section: section,
                 topTeam: team.team,
                 winner: null,
-              });
-            }
-            return acc;
-          }, []);
-
+              };
+            } else bottomTeams.push(team.team);
+          });
+          bottomTeams.reverse();
           const tempMatchups: Matchup[] = [];
-          let i = 0;
-          while (i < newMatchups.length) {
-            if (
-              sectionTeams
-                .find((team) => team.team === newMatchups[i].topTeam)!
-                .buchholzOpp.includes(newMatchups[i].bottomTeam) &&
-              i < newMatchups.length - 2
-            ) {
-              tempMatchups.push({ ...newMatchups[i], bottomTeam: newMatchups[i + 1].bottomTeam });
-              tempMatchups.push({ ...newMatchups[i + 1], bottomTeam: newMatchups[i].bottomTeam });
-              i += 2;
-            } else {
-              tempMatchups.push(newMatchups[i]);
-              i++;
-            }
+          for (const newMatchup of newMatchups) {
+            if (!newMatchup) continue;
+            const newBottomTeam = bottomTeams.find(
+              (bottomTeam) =>
+                !sectionTeams
+                  .find((team) => team.team === newMatchup.topTeam)!
+                  .buchholzOpp.includes(bottomTeam),
+            );
+            tempMatchups.push({
+              ...newMatchup,
+              bottomTeam: newBottomTeam!,
+            });
+            bottomTeams = bottomTeams.filter((bottomTeam) => bottomTeam !== newBottomTeam);
           }
           updatedMatchups.push(tempMatchups);
         }
@@ -225,7 +221,7 @@ function Round({
   setResults: (arg0: number, arg1: string, arg2: string | null) => void;
 }) {
   let sections: ("0-0" | "0-1" | "0-2" | "1-0" | "1-1" | "1-2" | "2-0" | "2-1" | "2-2")[];
-  // Decide on making an empty placeholder bracket or revert to showing rounds only as they are finished
+  // TO-DO: Decide on making an empty placeholder bracket or revert to showing rounds only as they are finished
   let shown = true;
   switch (id) {
     case 1:
@@ -503,7 +499,7 @@ function MapAccordion({
 function FinalResults({ rounds }: { rounds: Round[] }) {
   const sections = ["3-0", "3-1", "3-2", "2-3", "1-3", "0-3"];
 
-  const results = stage1Teams.map((team) => {
+  const results = stage2Teams.map((team) => {
     const wins = rounds.reduce((acc, round) => {
       const match = round.matchups.find(
         (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
