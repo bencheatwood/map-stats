@@ -18,26 +18,25 @@ createRoot(document.getElementById("root")!).render(
 );
 
 function setupAutoUpdate() {
-  const interval = 1000 * 5;
+  const interval = 1000 * 60 * 5;
 
-  const getActiveHash = () => {
-    const scripts = [...document.querySelectorAll("script")] as HTMLScriptElement[];
-    const mainScript = scripts.find((s) => s.src && s.src.includes("/assets/index-"));
-    return mainScript ? mainScript.src : null;
-  };
-
-  const currentScriptSrc = getActiveHash();
+  const currentScriptSrc = document
+    .querySelector('script[src*="/assets/index-"]')
+    ?.getAttribute("src")
+    ?.split("/")
+    .pop();
   const checkForUpdates = async () => {
     try {
-      const response = await fetch(`/index.html?t=${new Date().toISOString()}`, {
-        cache: "no-store",
-      });
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}/index.html?t=${new Date().toISOString()}`,
+        {
+          cache: "no-store",
+        },
+      );
       const html = await response.text();
+      const match = html.match(/src=["'](?:[^"']*\/)?assets\/(index-[a-zA-Z0-9_-]+\.js)["']/);
 
-      const match = /src="([^"]*\/assets\/index-.*\.js)"/.exec(html);
-      const latestScriptSrc = match ? match[1] : null;
-
-      if (latestScriptSrc && currentScriptSrc && !currentScriptSrc.endsWith(latestScriptSrc)) {
+      if (currentScriptSrc && match && currentScriptSrc !== match[1]) {
         if (!toast.getToasts().length) {
           toast.info("New version available, update now?", {
             action: (

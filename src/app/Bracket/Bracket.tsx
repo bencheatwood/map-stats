@@ -264,23 +264,15 @@ export default function Bracket() {
                 bottomTeams.delete(bottomTeam);
                 returnBottomTeam = bottomTeam;
                 break;
-              } else console.log(newMatchup.topTeam, " - skipped", bottomTeam);
+              }
             }
             if (!returnBottomTeam) {
-              console.log(newMatchup.topTeam, " - no available teams");
               for (const tempMatchup of tempMatchups.toReversed()) {
                 if (
                   !sectionTeams
                     .find((team) => team.team === newMatchup.topTeam)!
                     .buchholzOpp.includes(tempMatchup.bottomTeam)
                 ) {
-                  console.log(
-                    newMatchup.topTeam,
-                    " - takes",
-                    tempMatchup.bottomTeam,
-                    "from",
-                    tempMatchup.topTeam,
-                  );
                   returnBottomTeam = tempMatchup.bottomTeam;
                   for (const bottomTeam of bottomTeams) {
                     if (
@@ -288,13 +280,12 @@ export default function Bracket() {
                         .find((team) => team.team === tempMatchup.topTeam)!
                         .buchholzOpp.includes(bottomTeam)
                     ) {
-                      console.log(tempMatchup.topTeam, " - takes", bottomTeam);
                       bottomTeams.delete(bottomTeam);
                       Object.assign(tempMatchup, {
                         bottomTeam: bottomTeam,
                       });
                       break;
-                    } else console.log(newMatchup.topTeam, " - skipped", bottomTeam);
+                    }
                   }
                   break;
                 }
