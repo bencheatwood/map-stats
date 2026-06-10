@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Checkbox } from "#ui/checkbox";
 import { Field, FieldGroup, FieldLabel } from "#ui/field";
@@ -78,6 +78,18 @@ export default function Bracket() {
   const [saveBrowser, setSaveBrowser] = useState<boolean>(
     typeof localStorage.getItem("savedConfig") === "string",
   );
+  const [stage, setStage] = useState<string>("stage1");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // This is a shitty solution but whatever for now
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setStage("stage2");
+      setTimeout(() => setStage("stage3"), 0);
+    }, 0);
+    setLoading(false);
+  }, []);
 
   function setPicks({
     currentStage,
@@ -171,65 +183,63 @@ export default function Bracket() {
   }
 
   return (
-    <>
-      <Tabs defaultValue="stage3">
-        <TabsList className="mx-auto mb-4 rounded-none border-b-2 bg-transparent pb-1">
-          <TabsTrigger value="stage1" className="text-md select-none">
-            Stage 1
-          </TabsTrigger>
-          <TabsTrigger value="stage2" className="text-md select-none">
-            Stage 2
-          </TabsTrigger>
-          <TabsTrigger value="stage3" className="text-md select-none">
-            Stage 3
-          </TabsTrigger>
-          <TabsTrigger value="playoffs" className="text-md select-none">
-            Playoffs
-          </TabsTrigger>
-          <FieldGroup className="mr-2 ml-10 w-37">
-            <Field orientation="horizontal">
-              <Checkbox
-                className="cursor-pointer select-none"
-                checked={saveBrowser}
-                onCheckedChange={(checking) => {
-                  if (checking) {
-                    localStorage.setItem("savedConfig", JSON.stringify(pickState));
-                  } else localStorage.removeItem("savedConfig");
-                  setSaveBrowser(checking);
-                }}
-              />
-              <FieldLabel>Save picks to browser</FieldLabel>
-            </Field>
-          </FieldGroup>
-        </TabsList>
-        <TabsContent value="stage1">
-          <Stage
-            teams={stage1Teams}
-            setPicks={setPicks}
-            currentStage={1}
-            pickStateRounds={pickState.find((pick) => pick.stage === 1)?.rounds ?? []}
-          />
-        </TabsContent>
-        <TabsContent value="stage2">
-          <Stage
-            teams={stage2Teams}
-            setPicks={setPicks}
-            currentStage={2}
-            pickStateRounds={pickState.find((pick) => pick.stage === 2)?.rounds ?? []}
-          />
-        </TabsContent>
-        <TabsContent value="stage3">
-          <Stage
-            teams={stage3Teams}
-            setPicks={setPicks}
-            currentStage={3}
-            pickStateRounds={pickState.find((pick) => pick.stage === 3)?.rounds ?? []}
-          />
-        </TabsContent>
-        <TabsContent value="playoffs">
-          <Playoffs teams={playoffTeams} />
-        </TabsContent>
-      </Tabs>
-    </>
+    <Tabs value={stage} onValueChange={setStage}>
+      <TabsList className="mx-auto mb-4 rounded-none border-b-2 bg-transparent pb-1">
+        <TabsTrigger value="stage1" className="text-md select-none">
+          Stage 1
+        </TabsTrigger>
+        <TabsTrigger value="stage2" className="text-md select-none">
+          Stage 2
+        </TabsTrigger>
+        <TabsTrigger value="stage3" className="text-md select-none">
+          Stage 3
+        </TabsTrigger>
+        <TabsTrigger value="playoffs" className="text-md select-none">
+          Playoffs
+        </TabsTrigger>
+        <FieldGroup className="mr-2 ml-10 w-37">
+          <Field orientation="horizontal">
+            <Checkbox
+              className="cursor-pointer select-none"
+              checked={saveBrowser}
+              onCheckedChange={(checking) => {
+                if (checking) {
+                  localStorage.setItem("savedConfig", JSON.stringify(pickState));
+                } else localStorage.removeItem("savedConfig");
+                setSaveBrowser(checking);
+              }}
+            />
+            <FieldLabel>Save picks to browser</FieldLabel>
+          </Field>
+        </FieldGroup>
+      </TabsList>
+      <TabsContent value="stage1">
+        <Stage
+          teams={stage1Teams}
+          setPicks={setPicks}
+          currentStage={1}
+          pickStateRounds={pickState.find((pick) => pick.stage === 1)?.rounds ?? []}
+        />
+      </TabsContent>
+      <TabsContent value="stage2">
+        <Stage
+          teams={stage2Teams}
+          setPicks={setPicks}
+          currentStage={2}
+          pickStateRounds={pickState.find((pick) => pick.stage === 2)?.rounds ?? []}
+        />
+      </TabsContent>
+      <TabsContent value="stage3">
+        <Stage
+          teams={stage3Teams}
+          setPicks={setPicks}
+          currentStage={3}
+          pickStateRounds={pickState.find((pick) => pick.stage === 3)?.rounds ?? []}
+        />
+      </TabsContent>
+      <TabsContent value="playoffs">
+        <Playoffs teams={playoffTeams} />
+      </TabsContent>
+    </Tabs>
   );
 }

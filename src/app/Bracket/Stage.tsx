@@ -331,7 +331,6 @@ export default function Stage({
           });
           updatedMatchups.push(tempMatchups);
         }
-        console.log(round.id, updatedMatchups.flat());
 
         return {
           id: round.id,

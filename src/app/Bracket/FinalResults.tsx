@@ -46,8 +46,6 @@ export default function FinalResults({ teams, rounds }: { teams: string[]; round
     };
   });
 
-  console.log(teams);
-
   results.sort((a, b) => {
     const resDiff = b.buchholzSelf - a.buchholzSelf;
 
