@@ -44,7 +44,7 @@ export default function Round({
       break;
   }
   return (
-    <div className="h-full w-full min-w-15">
+    <div className="h-full w-full min-w-15 select-none">
       <div className="mb-4 text-center text-lg md:text-2xl">
         {id.length > 1 ? id : `Round ${id}`}
       </div>

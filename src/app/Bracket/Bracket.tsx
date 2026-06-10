@@ -79,16 +79,15 @@ export default function Bracket() {
     typeof localStorage.getItem("savedConfig") === "string",
   );
   const [stage, setStage] = useState<string>("stage1");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // This is a shitty solution but whatever for now
   useEffect(() => {
-    setLoading(true);
     setTimeout(() => {
       setStage("stage2");
-      setTimeout(() => setStage("stage3"), 0);
-    }, 0);
-    setLoading(false);
+      setTimeout(() => setStage("stage3"), 10);
+      setTimeout(() => setLoading(false), 10);
+    }, 10);
   }, []);
 
   function setPicks({
@@ -183,7 +182,7 @@ export default function Bracket() {
   }
 
   return (
-    <Tabs value={stage} onValueChange={setStage}>
+    <Tabs value={stage} onValueChange={setStage} hidden={loading}>
       <TabsList className="mx-auto mb-4 rounded-none border-b-2 bg-transparent pb-1">
         <TabsTrigger value="stage1" className="text-md select-none">
           Stage 1
