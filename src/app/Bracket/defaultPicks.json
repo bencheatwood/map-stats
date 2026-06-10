@@ -1,0 +1,536 @@
+[
+    {
+        "rounds": [
+            {
+                "id": 1,
+                "matchups": [
+                    {
+                        "bottomTeam": "NRG",
+                        "section": "0-0",
+                        "topTeam": "GamerLegion",
+                        "winner": "GamerLegion"
+                    },
+                    {
+                        "bottomTeam": "TYLOO",
+                        "section": "0-0",
+                        "topTeam": "B8",
+                        "winner": "B8"
+                    },
+                    {
+                        "bottomTeam": "Sharks",
+                        "section": "0-0",
+                        "topTeam": "HEROIC",
+                        "winner": "Sharks"
+                    },
+                    {
+                        "bottomTeam": "Gaimin Gladiators",
+                        "section": "0-0",
+                        "topTeam": "BetBoom",
+                        "winner": "BetBoom"
+                    },
+                    {
+                        "bottomTeam": "Liquid",
+                        "section": "0-0",
+                        "topTeam": "BIG",
+                        "winner": "Liquid"
+                    },
+                    {
+                        "bottomTeam": "Lynn Vision",
+                        "section": "0-0",
+                        "topTeam": "M80",
+                        "winner": "M80"
+                    },
+                    {
+                        "bottomTeam": "THUNDER dOWNUNDER",
+                        "section": "0-0",
+                        "topTeam": "MIBR",
+                        "winner": "THUNDER dOWNUNDER"
+                    },
+                    {
+                        "bottomTeam": "FlyQuest",
+                        "section": "0-0",
+                        "topTeam": "SINNERS",
+                        "winner": "FlyQuest"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "matchups": [
+                    {
+                        "bottomTeam": "FlyQuest",
+                        "section": "1-0",
+                        "topTeam": "GamerLegion",
+                        "winner": "GamerLegion"
+                    },
+                    {
+                        "bottomTeam": "THUNDER dOWNUNDER",
+                        "section": "1-0",
+                        "topTeam": "B8",
+                        "winner": "B8"
+                    },
+                    {
+                        "bottomTeam": "Liquid",
+                        "section": "1-0",
+                        "topTeam": "BetBoom",
+                        "winner": "BetBoom"
+                    },
+                    {
+                        "bottomTeam": "Sharks",
+                        "section": "1-0",
+                        "topTeam": "M80",
+                        "winner": "M80"
+                    },
+                    {
+                        "bottomTeam": "Lynn Vision",
+                        "section": "0-1",
+                        "topTeam": "HEROIC",
+                        "winner": "Lynn Vision"
+                    },
+                    {
+                        "bottomTeam": "Gaimin Gladiators",
+                        "section": "0-1",
+                        "topTeam": "BIG",
+                        "winner": "BIG"
+                    },
+                    {
+                        "bottomTeam": "TYLOO",
+                        "section": "0-1",
+                        "topTeam": "MIBR",
+                        "winner": "MIBR"
+                    },
+                    {
+                        "bottomTeam": "NRG",
+                        "section": "0-1",
+                        "topTeam": "SINNERS",
+                        "winner": "NRG"
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "matchups": [
+                    {
+                        "bottomTeam": "BetBoom",
+                        "section": "2-0",
+                        "topTeam": "GamerLegion",
+                        "winner": "BetBoom"
+                    },
+                    {
+                        "bottomTeam": "B8",
+                        "section": "2-0",
+                        "topTeam": "M80",
+                        "winner": "B8"
+                    },
+                    {
+                        "bottomTeam": "MIBR",
+                        "section": "1-1",
+                        "topTeam": "Liquid",
+                        "winner": "MIBR"
+                    },
+                    {
+                        "bottomTeam": "BIG",
+                        "section": "1-1",
+                        "topTeam": "THUNDER dOWNUNDER",
+                        "winner": "BIG"
+                    },
+                    {
+                        "bottomTeam": "FlyQuest",
+                        "section": "1-1",
+                        "topTeam": "NRG",
+                        "winner": "NRG"
+                    },
+                    {
+                        "bottomTeam": "Lynn Vision",
+                        "section": "1-1",
+                        "topTeam": "Sharks",
+                        "winner": "Lynn Vision"
+                    },
+                    {
+                        "bottomTeam": "SINNERS",
+                        "section": "0-2",
+                        "topTeam": "TYLOO",
+                        "winner": "TYLOO"
+                    },
+                    {
+                        "bottomTeam": "HEROIC",
+                        "section": "0-2",
+                        "topTeam": "Gaimin Gladiators",
+                        "winner": "HEROIC"
+                    }
+                ]
+            },
+            {
+                "id": 4,
+                "matchups": [
+                    {
+                        "bottomTeam": "BIG",
+                        "section": "2-1",
+                        "topTeam": "GamerLegion",
+                        "winner": "GamerLegion"
+                    },
+                    {
+                        "bottomTeam": "NRG",
+                        "section": "2-1",
+                        "topTeam": "M80",
+                        "winner": "M80"
+                    },
+                    {
+                        "bottomTeam": "MIBR",
+                        "section": "2-1",
+                        "topTeam": "Lynn Vision",
+                        "winner": "MIBR"
+                    },
+                    {
+                        "bottomTeam": "HEROIC",
+                        "section": "1-2",
+                        "topTeam": "Liquid",
+                        "winner": "Liquid"
+                    },
+                    {
+                        "bottomTeam": "FlyQuest",
+                        "section": "1-2",
+                        "topTeam": "THUNDER dOWNUNDER",
+                        "winner": "FlyQuest"
+                    },
+                    {
+                        "bottomTeam": "Sharks",
+                        "section": "1-2",
+                        "topTeam": "TYLOO",
+                        "winner": "TYLOO"
+                    }
+                ]
+            },
+            {
+                "id": 5,
+                "matchups": [
+                    {
+                        "bottomTeam": "FlyQuest",
+                        "section": "2-2",
+                        "topTeam": "Liquid",
+                        "winner": "FlyQuest"
+                    },
+                    {
+                        "bottomTeam": "BIG",
+                        "section": "2-2",
+                        "topTeam": "NRG",
+                        "winner": "BIG"
+                    },
+                    {
+                        "bottomTeam": "Lynn Vision",
+                        "section": "2-2",
+                        "topTeam": "TYLOO",
+                        "winner": "TYLOO"
+                    }
+                ]
+            }
+        ],
+        "stage": 1
+    },
+    {
+        "rounds": [
+            {
+                "id": 1,
+                "matchups": [
+                    {
+                        "bottomTeam": "B8",
+                        "section": "0-0",
+                        "topTeam": "FUT",
+                        "winner": "FUT"
+                    },
+                    {
+                        "bottomTeam": "BetBoom",
+                        "section": "0-0",
+                        "topTeam": "Spirit",
+                        "winner": "Spirit"
+                    },
+                    {
+                        "bottomTeam": "GamerLegion",
+                        "section": "0-0",
+                        "topTeam": "Astralis",
+                        "winner": "Astralis"
+                    },
+                    {
+                        "bottomTeam": "M80",
+                        "section": "0-0",
+                        "topTeam": "G2",
+                        "winner": "G2"
+                    },
+                    {
+                        "bottomTeam": "MIBR",
+                        "section": "0-0",
+                        "topTeam": "Legacy",
+                        "winner": "MIBR"
+                    },
+                    {
+                        "bottomTeam": "TYLOO",
+                        "section": "0-0",
+                        "topTeam": "paiN",
+                        "winner": "TYLOO"
+                    },
+                    {
+                        "bottomTeam": "BIG",
+                        "section": "0-0",
+                        "topTeam": "Monte",
+                        "winner": "Monte"
+                    },
+                    {
+                        "bottomTeam": "FlyQuest",
+                        "section": "0-0",
+                        "topTeam": "9z",
+                        "winner": "9z"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "matchups": [
+                    {
+                        "bottomTeam": "TYLOO",
+                        "section": "1-0",
+                        "topTeam": "FUT",
+                        "winner": "FUT"
+                    },
+                    {
+                        "bottomTeam": "MIBR",
+                        "section": "1-0",
+                        "topTeam": "Spirit",
+                        "winner": "Spirit"
+                    },
+                    {
+                        "bottomTeam": "9z",
+                        "section": "1-0",
+                        "topTeam": "Astralis",
+                        "winner": "9z"
+                    },
+                    {
+                        "bottomTeam": "Monte",
+                        "section": "1-0",
+                        "topTeam": "G2",
+                        "winner": "G2"
+                    },
+                    {
+                        "bottomTeam": "FlyQuest",
+                        "section": "0-1",
+                        "topTeam": "Legacy",
+                        "winner": "Legacy"
+                    },
+                    {
+                        "bottomTeam": "BIG",
+                        "section": "0-1",
+                        "topTeam": "paiN",
+                        "winner": "BIG"
+                    },
+                    {
+                        "bottomTeam": "M80",
+                        "section": "0-1",
+                        "topTeam": "B8",
+                        "winner": "M80"
+                    },
+                    {
+                        "bottomTeam": "GamerLegion",
+                        "section": "0-1",
+                        "topTeam": "BetBoom",
+                        "winner": "BetBoom"
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "matchups": [
+                    {
+                        "bottomTeam": "9z",
+                        "section": "2-0",
+                        "topTeam": "Spirit",
+                        "winner": "Spirit"
+                    },
+                    {
+                        "bottomTeam": "FUT",
+                        "section": "2-0",
+                        "topTeam": "G2",
+                        "winner": "FUT"
+                    },
+                    {
+                        "bottomTeam": "Legacy",
+                        "section": "1-1",
+                        "topTeam": "Monte",
+                        "winner": "Monte"
+                    },
+                    {
+                        "bottomTeam": "BIG",
+                        "section": "1-1",
+                        "topTeam": "MIBR",
+                        "winner": "BIG"
+                    },
+                    {
+                        "bottomTeam": "TYLOO",
+                        "section": "1-1",
+                        "topTeam": "Astralis",
+                        "winner": "TYLOO"
+                    },
+                    {
+                        "bottomTeam": "M80",
+                        "section": "1-1",
+                        "topTeam": "BetBoom",
+                        "winner": "BetBoom"
+                    },
+                    {
+                        "bottomTeam": "GamerLegion",
+                        "section": "0-2",
+                        "topTeam": "B8",
+                        "winner": "B8"
+                    },
+                    {
+                        "bottomTeam": "paiN",
+                        "section": "0-2",
+                        "topTeam": "FlyQuest",
+                        "winner": "paiN"
+                    }
+                ]
+            },
+            {
+                "id": 4,
+                "matchups": [
+                    {
+                        "bottomTeam": "BIG",
+                        "section": "2-1",
+                        "topTeam": "G2",
+                        "winner": "G2"
+                    },
+                    {
+                        "bottomTeam": "BetBoom",
+                        "section": "2-1",
+                        "topTeam": "Monte",
+                        "winner": "BetBoom"
+                    },
+                    {
+                        "bottomTeam": "9z",
+                        "section": "2-1",
+                        "topTeam": "TYLOO",
+                        "winner": "9z"
+                    },
+                    {
+                        "bottomTeam": "B8",
+                        "section": "1-2",
+                        "topTeam": "MIBR",
+                        "winner": "B8"
+                    },
+                    {
+                        "bottomTeam": "Legacy",
+                        "section": "1-2",
+                        "topTeam": "M80",
+                        "winner": "Legacy"
+                    },
+                    {
+                        "bottomTeam": "paiN",
+                        "section": "1-2",
+                        "topTeam": "Astralis",
+                        "winner": "paiN"
+                    }
+                ]
+            },
+            {
+                "id": 5,
+                "matchups": [
+                    {
+                        "bottomTeam": "paiN",
+                        "section": "2-2",
+                        "topTeam": "Monte",
+                        "winner": "Monte"
+                    },
+                    {
+                        "bottomTeam": "Legacy",
+                        "section": "2-2",
+                        "topTeam": "TYLOO",
+                        "winner": "Legacy"
+                    },
+                    {
+                        "bottomTeam": "B8",
+                        "section": "2-2",
+                        "topTeam": "BIG",
+                        "winner": "B8"
+                    }
+                ]
+            }
+        ],
+        "stage": 2
+    },
+    {
+        "rounds": [
+            {
+                "id": 1,
+                "matchups": [
+                    {
+                        "bottomTeam": "FUT",
+                        "section": "0-0",
+                        "topTeam": "Vitality",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "Spirit",
+                        "section": "0-0",
+                        "topTeam": "Natus Vincere",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "G2",
+                        "section": "0-0",
+                        "topTeam": "Falcons",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "BetBoom",
+                        "section": "0-0",
+                        "topTeam": "The MongolZ",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "9z",
+                        "section": "0-0",
+                        "topTeam": "PARIVISION",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "Monte",
+                        "section": "0-0",
+                        "topTeam": "Aurora",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "B8",
+                        "section": "0-0",
+                        "topTeam": "FURIA",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "Legacy",
+                        "section": "0-0",
+                        "topTeam": "MOUZ",
+                        "winner": null
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "matchups": []
+            },
+            {
+                "id": 3,
+                "matchups": []
+            },
+            {
+                "id": 4,
+                "matchups": []
+            },
+            {
+                "id": 5,
+                "matchups": []
+            }
+        ],
+        "stage": 3
+    },
+    {
+        "rounds": [],
+        "stage": 4
+    }
+]

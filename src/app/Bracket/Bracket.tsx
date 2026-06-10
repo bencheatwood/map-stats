@@ -1,686 +1,235 @@
-import { Info } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "#ui/accordion";
-import { Badge } from "#ui/badge";
-import { Button } from "#ui/button";
-import { Item, ItemContent, ItemMedia, ItemTitle } from "#ui/item";
-import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "#ui/popover";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#ui/table";
+import { Checkbox } from "#ui/checkbox";
+import { Field, FieldGroup, FieldLabel } from "#ui/field";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "#ui/tabs";
 
+import defaultPicks from "./defaultPicks.json";
+import Playoffs from "./Playoffs";
+import Stage from "./Stage";
 import teamStats from "@/scrape/combinedStats.json";
 
-import type { CombinedType, Matchup, Round } from "@/types";
+import type { PickType, RoundType } from "@/types";
 
-const mapNames = ["Ancient", "Anubis", "Dust2", "Inferno", "Mirage", "Nuke", "Overpass"];
-
-// TO-DO:
-// - Make stage a parameter chosen from tabs
-// - Carry over Buchholz seeding to automatically sort final results
-//     - These are manually sorted by Stage 1 results
-const stage1Teams = ["B8", "BetBoom", "GamerLegion", "M80", "MIBR", "TYLOO", "BIG", "FlyQuest"];
-
-const stage2Teams = ["Spirit", "Astralis", "G2", "FUT", "Legacy", "paiN", "9z", "Monte"]
-  .sort(
-    (a, b) =>
-      teamStats.find((team) => team.name === a)!.valve -
-      teamStats.find((team) => team.name === b)!.valve,
-  )
-  .concat(stage1Teams);
-
-// Append seeding (this is VRS ranking in Stage 1)
-const adjustedTeamStats = stage2Teams.map((team, i) =>
-  Object.assign(teamStats.find((teamStat) => teamStat.name === team)!, { seed: i + 1 }),
+const stage1Teams = [
+  "B8",
+  "BetBoom",
+  "GamerLegion",
+  "M80",
+  "MIBR",
+  "TYLOO",
+  "BIG",
+  "FlyQuest",
+  "NRG",
+  "Liquid",
+  "Lynn Vision",
+  "HEROIC",
+  "Sharks",
+  "THUNDER dOWNUNDER",
+  "Gaimin Gladiators",
+  "SINNERS",
+].sort(
+  (a, b) =>
+    teamStats.find((team) => team.name === a)!.valve -
+    teamStats.find((team) => team.name === b)!.valve,
 );
 
+const initialStage2Teams = [
+  "Spirit",
+  "Legacy",
+  "Astralis",
+  "FUT",
+  "G2",
+  "paiN",
+  "9z",
+  "Monte",
+].sort(
+  (a, b) =>
+    teamStats.find((team) => team.name === a)!.valve -
+    teamStats.find((team) => team.name === b)!.valve,
+);
+
+const initialStage3Teams = [
+  "Vitality",
+  "Natus Vincere",
+  "Falcons",
+  "FURIA",
+  "Aurora",
+  "MOUZ",
+  "The MongolZ",
+  "PARIVISION",
+].sort(
+  (a, b) =>
+    teamStats.find((team) => team.name === a)!.valve -
+    teamStats.find((team) => team.name === b)!.valve,
+);
+
+const savedConfig = localStorage.getItem("savedConfig")
+  ? (JSON.parse(localStorage.getItem("savedConfig")!) as PickType[])
+  : null;
+
 export default function Bracket() {
-  const [rounds, setRounds] = useState<Round[]>([
-    {
-      id: 1,
-      matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
-        if (i < 8)
-          acc.push({
-            bottomTeam: stage2Teams[i + 8],
-            section: "0-0",
-            topTeam: team,
-            winner: team,
-          });
-        return acc;
-      }, []),
-    },
-    {
-      id: 2,
-      matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
-        if (i < 4)
-          acc.push({
-            bottomTeam: stage2Teams[7 - i],
-            section: "1-0",
-            topTeam: team,
-            winner: team,
-          });
-        if (i >= 8 && i < 12)
-          acc.push({
-            bottomTeam: stage2Teams[15 - i + 8],
-            section: "0-1",
-            topTeam: team,
-            winner: team,
-          });
-        return acc;
-      }, []),
-    },
-    {
-      id: 3,
-      matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
-        if (i < 2)
-          acc.push({
-            bottomTeam: stage2Teams[3 - i],
-            section: "2-0",
-            topTeam: team,
-            winner: team,
-          });
-        if (i >= 4 && i < 8)
-          acc.push({
-            bottomTeam: stage2Teams[11 - i + 4],
-            section: "1-1",
-            topTeam: team,
-            winner: team,
-          });
-        if (i >= 12 && i < 14)
-          acc.push({
-            bottomTeam: stage2Teams[15 - i + 12],
-            section: "0-2",
-            topTeam: team,
-            winner: team,
-          });
-        return acc;
-      }, []),
-    },
-    {
-      id: 4,
-      matchups: stage2Teams.reduce<Matchup[]>((acc, team, i) => {
-        if (i >= 2 && i < 5)
-          acc.push({
-            bottomTeam: stage2Teams[7 - i + 2],
-            section: "2-1",
-            topTeam: team,
-            winner: team,
-          });
-        if (i >= 8 && i < 11)
-          acc.push({
-            bottomTeam: stage2Teams[13 - i + 8],
-            section: "1-2",
-            topTeam: team,
-            winner: team,
-          });
-        return acc;
-      }, []),
-    },
-    {
-      id: 5,
-      matchups: [
-        {
-          bottomTeam: stage2Teams[9],
-          section: "2-2",
-          topTeam: stage2Teams[5],
-          winner: stage2Teams[5],
-        },
-        {
-          bottomTeam: stage2Teams[8],
-          section: "2-2",
-          topTeam: stage2Teams[6],
-          winner: stage2Teams[6],
-        },
-        {
-          bottomTeam: stage2Teams[10],
-          section: "2-2",
-          topTeam: stage2Teams[7],
-          winner: stage2Teams[7],
-        },
-      ],
-    },
-  ]);
+  const [stage2Teams, setStage2Teams] = useState<string[]>([]);
+  const [stage3Teams, setStage3Teams] = useState<string[]>([]);
+  const [playoffTeams, setPlayoffTeams] = useState<string[]>([]);
+  const [pickState, setPickState] = useState<PickType[]>(
+    savedConfig ? savedConfig : (defaultPicks as PickType[]),
+  );
+  const [saveBrowser, setSaveBrowser] = useState<boolean>(
+    typeof localStorage.getItem("savedConfig") === "string",
+  );
 
-  // TO-DO: Reset results for following round of match result changed when more than two rounds are shown
-  function setResults(id: number, topTeam: string, winner: string) {
-    const updateRounds: Round[] = rounds.map((round) => {
-      if (round.id === id) {
-        return {
-          id: id,
-          matchups: round.matchups.map((matchup) => {
-            if (matchup.topTeam === topTeam) return { ...matchup, winner: winner };
-            return matchup;
-          }),
-        };
-      }
-      return round;
+  function setPicks({
+    currentStage,
+    stageRounds,
+    stageTeams,
+  }: {
+    currentStage: number;
+    stageRounds: RoundType[];
+    stageTeams: string[];
+  }) {
+    const results = stageTeams.map((team) => {
+      const wins = stageRounds.reduce((acc, round) => {
+        const match = round.matchups.find(
+          (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
+        );
+        if (match && match.winner === team) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
+
+      const losses = stageRounds.reduce((acc, round) => {
+        const match = round.matchups.find(
+          (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
+        );
+        if (match && match.winner && match.winner !== team) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
+
+      const buchholzOpp = stageRounds.reduce<string[]>((acc, stageRound) => {
+        const match = stageRound.matchups.find(
+          (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
+        );
+        if (match && match.winner) {
+          acc.push(match.topTeam === team ? match.bottomTeam : match.topTeam);
+        }
+        return acc;
+      }, []);
+
+      return {
+        buchholzOpp: buchholzOpp,
+        buchholzSelf: wins - losses,
+        icon: teamStats.find((stat) => stat.name === team)?.icon,
+        record: `${wins}-${losses}`,
+        team: team,
+      };
     });
 
-    const futureRounds: Round[] = updateRounds.map((round) => {
-      if (round.id > id) {
-        let sections: ("0-0" | "0-1" | "0-2" | "1-0" | "1-1" | "1-2" | "2-0" | "2-1" | "2-2")[];
-        switch (round.id) {
-          case 2:
-            sections = ["1-0", "0-1"];
-            break;
-          case 3:
-            sections = ["2-0", "1-1", "0-2"];
-            break;
-          case 4:
-            sections = ["2-1", "1-2"];
-            break;
-          default:
-            sections = ["2-2"];
-            break;
-        }
+    const advTeams = results
+      .filter((result) => result.buchholzSelf > 0)
+      .sort((a, b) => {
+        const resDiff = b.buchholzSelf - a.buchholzSelf;
 
-        const prevResults = stage2Teams.map((team) => {
-          const wins = updateRounds.reduce((acc, updateRound) => {
-            const match = updateRound.matchups.find(
-              (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
-            );
-            if (updateRound.id <= id && match && match.winner === team) {
-              return acc + 1;
-            }
+        const seedDiff =
+          stage1Teams.findIndex((team) => team === a.team) -
+          stage1Teams.findIndex((team) => team === b.team);
+
+        const buchDiff =
+          results.reduce((acc, team) => {
+            if (b.buchholzOpp.includes(team.team)) acc += team.buchholzSelf;
+            return acc;
+          }, 0) -
+          results.reduce((acc, team) => {
+            if (a.buchholzOpp.includes(team.team)) acc += team.buchholzSelf;
             return acc;
           }, 0);
 
-          const losses = updateRounds.reduce((acc, updateRound) => {
-            const match = updateRound.matchups.find(
-              (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
-            );
-            if (updateRound.id <= id && match && match.winner && match.winner !== team) {
-              return acc + 1;
-            }
-            return acc;
-          }, 0);
+        return resDiff || buchDiff || seedDiff;
+      })
+      .map((result) => result.team);
 
-          const buchholzOpp = updateRounds.reduce<string[]>((acc, updateRound) => {
-            const match = updateRound.matchups.find(
-              (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
-            );
-            if (updateRound.id <= id && match && match.winner) {
-              acc.push(match.topTeam === team ? match.bottomTeam : match.topTeam);
-            }
-            return acc;
-          }, []);
+    if (currentStage === 1) setStage2Teams(initialStage2Teams.concat(advTeams));
+    else if (currentStage === 2) setStage3Teams(initialStage3Teams.concat(advTeams));
+    else if (currentStage === 3) setPlayoffTeams(advTeams);
 
-          return {
-            buchholzOpp: buchholzOpp,
-            buchholzSelf: wins - losses,
-            record: `${wins}-${losses}`,
-            team: team,
-          };
-        });
-
-        const updatedMatchups: Matchup[][] = [];
-        for (const section of sections) {
-          const sectionTeams = prevResults
-            .filter((result) => result.record === section)
-            .sort((a, b) => {
-              const seedDiff =
-                adjustedTeamStats.find((team) => team.name === a.team)!.seed -
-                adjustedTeamStats.find((team) => team.name === b.team)!.seed;
-
-              const buchDiff =
-                prevResults.reduce((acc, team) => {
-                  if (b.buchholzOpp.includes(team.team)) acc += team.buchholzSelf;
-                  return acc;
-                }, 0) -
-                prevResults.reduce((acc, team) => {
-                  if (a.buchholzOpp.includes(team.team)) acc += team.buchholzSelf;
-                  return acc;
-                }, 0);
-
-              return buchDiff || seedDiff;
-            });
-
-          const newMatchups = sectionTeams
-            .filter((_, i) => i < Math.floor(sectionTeams.length / 2))
-            .map((team) => {
-              return {
-                bottomTeam: "",
-                section: section,
-                topTeam: team.team,
-                winner: team.team,
-              };
-            });
-
-          const bottomTeams = new Set(
-            sectionTeams
-              .filter((_, i) => i >= Math.floor(sectionTeams.length / 2))
-              .map((team) => team.team)
-              .toReversed(),
-          );
-
-          const tempMatchups: Matchup[] = [];
-          newMatchups.forEach((newMatchup) => {
-            let returnBottomTeam = null;
-            for (const bottomTeam of bottomTeams) {
-              if (
-                !sectionTeams
-                  .find((team) => team.team === newMatchup.topTeam)!
-                  .buchholzOpp.includes(bottomTeam)
-              ) {
-                bottomTeams.delete(bottomTeam);
-                returnBottomTeam = bottomTeam;
-                break;
-              }
-            }
-            if (!returnBottomTeam) {
-              for (const tempMatchup of tempMatchups.toReversed()) {
-                if (
-                  !sectionTeams
-                    .find((team) => team.team === newMatchup.topTeam)!
-                    .buchholzOpp.includes(tempMatchup.bottomTeam)
-                ) {
-                  returnBottomTeam = tempMatchup.bottomTeam;
-                  for (const bottomTeam of bottomTeams) {
-                    if (
-                      !sectionTeams
-                        .find((team) => team.team === tempMatchup.topTeam)!
-                        .buchholzOpp.includes(bottomTeam)
-                    ) {
-                      bottomTeams.delete(bottomTeam);
-                      Object.assign(tempMatchup, {
-                        bottomTeam: bottomTeam,
-                      });
-                      break;
-                    }
-                  }
-                  break;
-                }
-              }
-            }
-            tempMatchups.push({ ...newMatchup, bottomTeam: returnBottomTeam ?? "" });
-            return;
-          });
-          updatedMatchups.push(tempMatchups);
-        }
-
-        return {
-          id: round.id,
-          matchups: updatedMatchups.flat(),
-        };
-      }
-      return round;
-    });
-
-    setRounds(futureRounds);
+    const newPicks =
+      pickState.length > 0
+        ? pickState.map((pick) => {
+            return pick.stage === currentStage ? { ...pick, rounds: stageRounds } : pick;
+          })
+        : [
+            { rounds: stageRounds, stage: 1 },
+            { rounds: [], stage: 2 },
+            { rounds: [], stage: 3 },
+            { rounds: [], stage: 4 },
+          ];
+    setPickState(newPicks);
+    if (saveBrowser) localStorage.setItem("savedConfig", JSON.stringify(newPicks));
   }
 
   return (
-    <div className="grid grid-cols-6 gap-4 md:gap-8">
-      {[1, 2, 3, 4, 5].map((id) => (
-        <Round
-          key={id}
-          id={id}
-          matchups={rounds.find((round) => round.id === id)?.matchups ?? []}
-          setResults={setResults}
-        />
-      ))}
-      <FinalResults rounds={rounds} />
-    </div>
-  );
-}
-
-function Round({
-  id,
-  matchups,
-  setResults,
-}: {
-  id: number;
-  matchups: Matchup[];
-  setResults: (arg0: number, arg1: string, arg2: string) => void;
-}) {
-  let sections: ("0-0" | "0-1" | "0-2" | "1-0" | "1-1" | "1-2" | "2-0" | "2-1" | "2-2")[];
-  switch (id) {
-    case 1:
-      sections = ["0-0"];
-      break;
-    case 2:
-      sections = ["1-0", "0-1"];
-      break;
-    case 3:
-      sections = ["2-0", "1-1", "0-2"];
-      break;
-    case 4:
-      sections = ["2-1", "1-2"];
-      break;
-    default:
-      sections = ["2-2"];
-      break;
-  }
-  return (
-    <div className="h-full w-full min-w-15">
-      <div className="mb-4 text-center text-lg md:text-2xl">{`Round ${id}`}</div>
-      <div className="h-full place-content-center space-y-8">
-        {sections.map((section) => (
-          <div key={section} className="space-y-4 rounded-lg border p-2">
-            <div className="text-center text-xl">{section}</div>
-            {matchups.map(
-              (matchup, i) =>
-                matchup.section === section && (
-                  <Matchup
-                    key={i}
-                    topTeam={matchup.topTeam}
-                    bottomTeam={matchup.bottomTeam}
-                    id={id}
-                    setResults={setResults}
-                  />
-                ),
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Matchup({
-  topTeam,
-  bottomTeam,
-  id,
-  setResults,
-}: {
-  topTeam: string;
-  bottomTeam: string;
-  id: number;
-  setResults: (arg0: number, arg1: string, arg2: string) => void;
-}) {
-  const [topStats, setTopStats] = useState<CombinedType | undefined>();
-  const [bottomStats, setBottomStats] = useState<CombinedType | undefined>();
-  const [selectTopTeam, setSelectTopTeam] = useState<boolean>(true);
-  const [selectBottomTeam, setSelectBottomTeam] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (topTeam === "" || bottomTeam === "") return;
-    const tempTopStats = teamStats.find((team) => team.name === topTeam);
-    const tempBottomStats = teamStats.find((team) => team.name === bottomTeam);
-    if (!tempTopStats || !tempBottomStats) return;
-    for (const mapName of mapNames) {
-      if (!tempTopStats.mapStats.find((stat) => stat.map === mapName)) {
-        tempTopStats.mapStats.push({
-          ban: 100,
-          losses: 0,
-          map: mapName,
-          pick: 0,
-          winRate: 0,
-          wins: 0,
-        });
-      }
-      if (!tempBottomStats.mapStats.find((stat) => stat.map === mapName)) {
-        tempBottomStats.mapStats.push({
-          ban: 100,
-          losses: 0,
-          map: mapName,
-          pick: 0,
-          winRate: 0,
-          wins: 0,
-        });
-      }
-    }
-    setTopStats(tempTopStats);
-    setBottomStats(tempBottomStats);
-  }, [topTeam, bottomTeam]);
-
-  return (
-    <div className="md:flex">
-      <div className="w-full min-w-10.5 space-y-1">
-        <Item
-          variant="outline"
-          className={`w-full cursor-pointer flex-nowrap select-none ${selectTopTeam ? "bg-green-700/80 hover:bg-green-700/60 " : "bg-accent hover:bg-accent/80 "}`}
-          onClick={() => {
-            if (!selectTopTeam) {
-              setSelectTopTeam(true);
-              setResults(id, topTeam, topTeam);
-            }
-            if (selectBottomTeam) setSelectBottomTeam(false);
-          }}
-        >
-          <ItemMedia>
-            <img src={topStats?.icon} className="size-4" />
-          </ItemMedia>
-          <ItemContent className="hidden truncate lg:block">{topTeam}</ItemContent>
-        </Item>
-        <Item
-          variant="outline"
-          className={`w-full min-w-10.5 cursor-pointer flex-nowrap select-none ${selectBottomTeam ? "bg-green-700/80 hover:bg-green-700/60 " : "bg-accent hover:bg-accent/80 "}`}
-          onClick={() => {
-            if (!selectBottomTeam) {
-              setSelectBottomTeam(true);
-              setResults(id, topTeam, bottomTeam);
-            }
-            if (selectTopTeam) setSelectTopTeam(false);
-          }}
-        >
-          <ItemMedia>
-            <img src={bottomStats?.icon} className="size-4" />
-          </ItemMedia>
-          <ItemContent className="hidden truncate lg:block">{bottomTeam}</ItemContent>
-        </Item>
-      </div>
-      {topStats && bottomStats && (
-        <Popover>
-          <PopoverTrigger
-            className="my-1 h-9.5 w-full md:my-auto md:ml-2 md:w-6"
-            render={
-              <Button variant="ghost" className="border-accent border py-4 md:border-0 md:py-0">
-                <Info className="size-4" />
-              </Button>
-            }
+    <>
+      <Tabs defaultValue="stage3">
+        <TabsList className="mx-auto mb-4 rounded-none border-b-2 bg-transparent pb-1">
+          <TabsTrigger value="stage1" className="text-md select-none">
+            Stage 1
+          </TabsTrigger>
+          <TabsTrigger value="stage2" className="text-md select-none">
+            Stage 2
+          </TabsTrigger>
+          <TabsTrigger value="stage3" className="text-md select-none">
+            Stage 3
+          </TabsTrigger>
+          <TabsTrigger value="playoffs" className="text-md select-none">
+            Playoffs
+          </TabsTrigger>
+          <FieldGroup className="mr-2 ml-10 w-37">
+            <Field orientation="horizontal">
+              <Checkbox
+                className="cursor-pointer select-none"
+                checked={saveBrowser}
+                onCheckedChange={(checking) => {
+                  if (checking) {
+                    localStorage.setItem("savedConfig", JSON.stringify(pickState));
+                  } else localStorage.removeItem("savedConfig");
+                  setSaveBrowser(checking);
+                }}
+              />
+              <FieldLabel>Save picks to browser</FieldLabel>
+            </Field>
+          </FieldGroup>
+        </TabsList>
+        <TabsContent value="stage1">
+          <Stage
+            teams={stage1Teams}
+            setPicks={setPicks}
+            currentStage={1}
+            pickStateRounds={pickState.find((pick) => pick.stage === 1)?.rounds ?? []}
           />
-          <PopoverContent side="right" className="bg-popover/60 backdrop-blur-2xl">
-            <PopoverHeader className="bg-accent rounded-md border py-2">
-              <div className="flex items-center justify-center space-x-3 text-lg font-semibold">
-                <Badge variant="outline">{topStats?.hltv}</Badge>
-                <img src={topStats?.icon} className="size-6" />
-                <span>
-                  {(topStats.matchStats.find((match) => match.opponent === bottomTeam)?.wins ?? 0) +
-                    " - " +
-                    (topStats.matchStats.find((match) => match.opponent === bottomTeam)?.losses ??
-                      0)}
-                </span>
-                <img src={bottomStats?.icon} className="size-6" />
-                <Badge variant="outline">{bottomStats?.hltv}</Badge>
-              </div>
-            </PopoverHeader>
-            <Accordion>
-              {mapNames.map((map) => (
-                <MapAccordion key={map} map={map} topStats={topStats} bottomStats={bottomStats} />
-              ))}
-            </Accordion>
-          </PopoverContent>
-        </Popover>
-      )}
-    </div>
-  );
-}
-
-function MapAccordion({
-  map,
-  topStats,
-  bottomStats,
-}: {
-  map: string;
-  topStats: CombinedType;
-  bottomStats: CombinedType;
-}) {
-  const topMapStats = topStats.mapStats.find((mapStat) => mapStat.map === map)!;
-  const bottomMapStats = bottomStats.mapStats.find((mapStat) => mapStat.map === map)!;
-
-  const topPick = topStats.mapStats.sort((a, b) => b.pick - a.pick).slice(0, 2);
-  const topBan = topStats.mapStats.sort((a, b) => b.ban - a.ban).slice(0, 1);
-  const bottomPick = bottomStats.mapStats.sort((a, b) => b.pick - a.pick).slice(0, 2);
-  const bottomBan = bottomStats.mapStats.sort((a, b) => b.ban - a.ban).slice(0, 1);
-
-  return (
-    <AccordionItem key={map}>
-      <AccordionTrigger className="bg-accent hover:bg-accent/80 tabular-nums hover:no-underline">
-        {
-          <div className="grid w-full grid-cols-3 gap-4">
-            <span className="w-1/3 font-bold">{map}</span>
-            <span
-              className={`flex w-1/3 ${topPick.find((pick) => pick.map === map) ? "text-green-500" : topBan.find((ban) => ban.map === map) ? "text-red-500" : ""} `}
-            >
-              <img src={topStats.icon} className="mx-auto my-auto mr-2 size-4" />
-              {(topMapStats?.pick.toFixed(1) ?? "0.0") + "%"}
-            </span>
-            <span
-              className={`flex w-1/3 ${bottomPick.find((pick) => pick.map === map) ? "text-green-500" : bottomBan.find((ban) => ban.map === map) ? "text-red-500" : ""} `}
-            >
-              <img src={bottomStats.icon} className="mx-auto my-auto mr-2 size-4" />
-              {(bottomMapStats.pick.toFixed(1) ?? "0.0") + "%"}
-            </span>
-          </div>
-        }
-      </AccordionTrigger>
-      <AccordionContent>
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead />
-              <TableHead>{<img src={topStats.icon} className="mx-auto size-8" />}</TableHead>
-              <TableHead>{<img src={bottomStats.icon} className="mx-auto size-8" />}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="tabular-nums">
-            <TableRow className="text-center hover:bg-transparent">
-              <TableCell className="font-semibold">Win</TableCell>
-              <TableCell
-                className={
-                  topMapStats.winRate > bottomMapStats.winRate ? "text-green-500" : "text-red-500"
-                }
-              >
-                {topMapStats.winRate.toFixed(1) + "%"}
-              </TableCell>
-              <TableCell
-                className={
-                  bottomMapStats.winRate > topMapStats.winRate ? "text-green-500" : "text-red-500"
-                }
-              >
-                {bottomMapStats.winRate.toFixed(1) + "%"}
-              </TableCell>
-            </TableRow>
-            <TableRow className="text-center hover:bg-transparent">
-              <TableCell className="font-semibold">Pick</TableCell>
-              <TableCell
-                className={
-                  topMapStats.pick > bottomMapStats.pick ? "text-green-500" : "text-red-500"
-                }
-              >
-                {topMapStats.pick.toFixed(1) + "%"}
-              </TableCell>
-              <TableCell
-                className={
-                  bottomMapStats.pick > topMapStats.pick ? "text-green-500" : "text-red-500"
-                }
-              >
-                {bottomMapStats.pick.toFixed(1) + "%"}
-              </TableCell>
-            </TableRow>
-            <TableRow className="text-center hover:bg-transparent">
-              <TableCell className="font-semibold">Ban</TableCell>
-              <TableCell
-                className={topMapStats.ban < bottomMapStats.ban ? "text-green-500" : "text-red-500"}
-              >
-                {topMapStats.ban.toFixed(1) + "%"}
-              </TableCell>
-              <TableCell
-                className={bottomMapStats.ban < topMapStats.ban ? "text-green-500" : "text-red-500"}
-              >
-                {bottomMapStats.ban.toFixed(1) + "%"}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </AccordionContent>
-    </AccordionItem>
-  );
-}
-
-function FinalResults({ rounds }: { rounds: Round[] }) {
-  const sections = ["3-0", "3-1", "3-2", "2-3", "1-3", "0-3"];
-
-  const results = stage2Teams.map((team) => {
-    const wins = rounds.reduce((acc, round) => {
-      const match = round.matchups.find(
-        (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
-      );
-      if (match && match.winner === team) {
-        return acc + 1;
-      }
-      return acc;
-    }, 0);
-
-    const losses = rounds.reduce((acc, round) => {
-      const match = round.matchups.find(
-        (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
-      );
-      if (match && match.winner && match.winner !== team) {
-        return acc + 1;
-      }
-      return acc;
-    }, 0);
-
-    return {
-      icon: teamStats.find((stat) => stat.name === team)?.icon,
-      record: `${wins}-${losses}`,
-      team: team,
-    };
-  });
-
-  return (
-    <div className="h-full w-full space-y-8">
-      <div className="mb-4 text-center text-lg md:text-2xl">Final Results</div>
-      {sections.map((section) => (
-        <div
-          key={section}
-          className={`min-w-15 space-y-1 rounded-lg border p-2 ${
-            section === "3-0"
-              ? "border-green-700"
-              : section === "3-1"
-                ? "border-green-800"
-                : section === "3-2"
-                  ? "border-green-900"
-                  : section === "2-3"
-                    ? "border-red-900"
-                    : section === "1-3"
-                      ? "border-red-800"
-                      : "border-red-700"
-          }`}
-        >
-          <div className="text-center text-xl">{section}</div>
-          {results.map(
-            (result) =>
-              result.record === section && (
-                <Item
-                  key={result.team}
-                  variant="outline"
-                  className={`w-full min-w-10.5 flex-nowrap select-none ${
-                    section === "3-0"
-                      ? "bg-green-700"
-                      : section === "3-1"
-                        ? "bg-green-800"
-                        : section === "3-2"
-                          ? "bg-green-900"
-                          : section === "2-3"
-                            ? "bg-red-900"
-                            : section === "1-3"
-                              ? "bg-red-800"
-                              : "bg-red-700"
-                  }`}
-                >
-                  <ItemMedia>
-                    <img src={result.icon} className="size-4" />
-                  </ItemMedia>
-                  <ItemContent className="hidden truncate lg:block">
-                    <ItemTitle>{result.team}</ItemTitle>
-                  </ItemContent>
-                </Item>
-              ),
-          )}
-        </div>
-      ))}
-    </div>
+        </TabsContent>
+        <TabsContent value="stage2">
+          <Stage
+            teams={stage2Teams}
+            setPicks={setPicks}
+            currentStage={2}
+            pickStateRounds={pickState.find((pick) => pick.stage === 2)?.rounds ?? []}
+          />
+        </TabsContent>
+        <TabsContent value="stage3">
+          <Stage
+            teams={stage3Teams}
+            setPicks={setPicks}
+            currentStage={3}
+            pickStateRounds={pickState.find((pick) => pick.stage === 3)?.rounds ?? []}
+          />
+        </TabsContent>
+        <TabsContent value="playoffs">
+          <Playoffs teams={playoffTeams} />
+        </TabsContent>
+      </Tabs>
+    </>
   );
 }
