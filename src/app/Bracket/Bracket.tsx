@@ -182,7 +182,7 @@ export default function Bracket() {
   }
 
   return (
-    <Tabs value={stage} onValueChange={setStage} hidden={loading}>
+    <Tabs value={stage} onValueChange={setStage} hidden={loading} className="w-full">
       <TabsList className="mx-auto mb-4 rounded-none border-b-2 bg-transparent pb-1">
         <TabsTrigger value="stage1" className="text-md select-none">
           Stage 1

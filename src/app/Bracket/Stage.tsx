@@ -57,102 +57,6 @@ export default function Stage({
             id: 5,
             matchups: [],
           },
-
-          /*
-           * Config for pre-defining all matches as top seed winning, rather than showing future rounds only after teams are picked
-           * Maybe make this a toggle?
-           */
-
-          //   {
-          //     id: 2,
-          //     matchups: teams.reduce<MatchupType[]>((acc, team, i) => {
-          //       if (i < 4)
-          //         acc.push({
-          //           bottomTeam: teams[7 - i],
-          //           section: "1-0",
-          //           topTeam: team,
-          //           winner: team,
-          //         });
-          //       if (i >= 8 && i < 12)
-          //         acc.push({
-          //           bottomTeam: teams[15 - i + 8],
-          //           section: "0-1",
-          //           topTeam: team,
-          //           winner: team,
-          //         });
-          //       return acc;
-          //     }, []),
-          //   },
-          //   {
-          //     id: 3,
-          //     matchups: teams.reduce<MatchupType[]>((acc, team, i) => {
-          //       if (i < 2)
-          //         acc.push({
-          //           bottomTeam: teams[3 - i],
-          //           section: "2-0",
-          //           topTeam: team,
-          //           winner: team,
-          //         });
-          //       if (i >= 4 && i < 8)
-          //         acc.push({
-          //           bottomTeam: teams[11 - i + 4],
-          //           section: "1-1",
-          //           topTeam: team,
-          //           winner: team,
-          //         });
-          //       if (i >= 12 && i < 14)
-          //         acc.push({
-          //           bottomTeam: teams[15 - i + 12],
-          //           section: "0-2",
-          //           topTeam: team,
-          //           winner: team,
-          //         });
-          //       return acc;
-          //     }, []),
-          //   },
-          //   {
-          //     id: 4,
-          //     matchups: teams.reduce<MatchupType[]>((acc, team, i) => {
-          //       if (i >= 2 && i < 5)
-          //         acc.push({
-          //           bottomTeam: teams[7 - i + 2],
-          //           section: "2-1",
-          //           topTeam: team,
-          //           winner: team,
-          //         });
-          //       if (i >= 8 && i < 11)
-          //         acc.push({
-          //           bottomTeam: teams[13 - i + 8],
-          //           section: "1-2",
-          //           topTeam: team,
-          //           winner: team,
-          //         });
-          //       return acc;
-          //     }, []),
-          //   },
-          //   {
-          //     id: 5,
-          //     matchups: [
-          //       {
-          //         bottomTeam: teams[9],
-          //         section: "2-2",
-          //         topTeam: teams[5],
-          //         winner: teams[5],
-          //       },
-          //       {
-          //         bottomTeam: teams[8],
-          //         section: "2-2",
-          //         topTeam: teams[6],
-          //         winner: teams[6],
-          //       },
-          //       {
-          //         bottomTeam: teams[10],
-          //         section: "2-2",
-          //         topTeam: teams[7],
-          //         winner: teams[7],
-          //       },
-          //     ],
-          //   },
         ],
   );
 
@@ -277,7 +181,7 @@ export default function Stage({
 
           const tempMatchups: MatchupType[] = [];
           newMatchups.forEach((newMatchup) => {
-            let returnBottomTeam = null;
+            let returnBottomTeam: string | null = null;
             for (const bottomTeam of bottomTeams) {
               if (
                 !sectionTeams
@@ -308,6 +212,32 @@ export default function Stage({
                         bottomTeam: bottomTeam,
                       });
                       break;
+                    } else {
+                      for (const adjMatchup of tempMatchups
+                        .filter((matchup) => matchup.topTeam !== tempMatchup.topTeam)
+                        .toReversed()) {
+                        if (
+                          !sectionTeams
+                            .find((team) => team.team === tempMatchup.topTeam)!
+                            .buchholzOpp.includes(adjMatchup.bottomTeam)
+                        ) {
+                          tempMatchup.bottomTeam = adjMatchup.bottomTeam;
+                          for (const bottomTeamAgain of bottomTeams) {
+                            if (
+                              !sectionTeams
+                                .find((team) => team.team === adjMatchup.topTeam)!
+                                .buchholzOpp.includes(bottomTeamAgain)
+                            ) {
+                              bottomTeams.delete(bottomTeamAgain);
+                              Object.assign(adjMatchup, {
+                                bottomTeam: bottomTeamAgain,
+                              });
+                              break;
+                            }
+                          }
+                          break;
+                        }
+                      }
                     }
                   }
                   break;
@@ -337,7 +267,7 @@ export default function Stage({
           matchups: updatedMatchups.flat(),
         };
       }
-      if (round.id > Number(id) + 1) {
+      if (Number(round.id) > Number(id) + 1) {
         return {
           id: round.id,
           matchups: [],
