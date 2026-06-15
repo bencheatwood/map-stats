@@ -5,36 +5,52 @@ import teamStats from "@/scrape/combinedStats.json";
 
 import type { RoundType, MatchupType } from "@/types";
 
-export default function Playoffs({ teams }: { teams: string[] }) {
-  const [rounds, setRounds] = useState<RoundType[]>([
-    {
-      id: 1,
-      matchups: teams
-        .reduce<MatchupType[]>((acc, team, i) => {
-          if (i < 4)
-            acc.push({
-              bottomTeam: teams[7 - i],
-              section: "0-0",
-              topTeam: team,
-              winner: null,
-            });
-          return acc;
-        }, [])
-        .map((match, i, arr) => {
-          if (i === 1) return arr[3];
-          else if (i === 3) return arr[1];
-          else return match;
-        }),
-    },
-    {
-      id: 2,
-      matchups: [],
-    },
-    {
-      id: 3,
-      matchups: [],
-    },
-  ]);
+export default function Playoffs({
+  teams,
+  setPicks,
+  pickStateRounds,
+}: {
+  teams: string[];
+  setPicks: (arg0: {
+    currentStage: number;
+    stageRounds: RoundType[];
+    stageTeams: string[];
+  }) => void;
+  pickStateRounds: RoundType[];
+}) {
+  const [rounds, setRounds] = useState<RoundType[]>(
+    pickStateRounds.length > 0
+      ? pickStateRounds
+      : [
+          {
+            id: 1,
+            matchups: teams
+              .reduce<MatchupType[]>((acc, team, i) => {
+                if (i < 4)
+                  acc.push({
+                    bottomTeam: teams[7 - i],
+                    section: "0-0",
+                    topTeam: team,
+                    winner: null,
+                  });
+                return acc;
+              }, [])
+              .map((match, i, arr) => {
+                if (i === 1) return arr[3];
+                else if (i === 3) return arr[1];
+                else return match;
+              }),
+          },
+          {
+            id: 2,
+            matchups: [],
+          },
+          {
+            id: 3,
+            matchups: [],
+          },
+        ],
+  );
 
   const adjustedTeamStats = teams.map((team, i) =>
     Object.assign(teamStats.find((teamStat) => teamStat.name === team)!, { seed: i + 1 }),
@@ -117,6 +133,7 @@ export default function Playoffs({ teams }: { teams: string[] }) {
     });
 
     setRounds(futureRounds);
+    setPicks({ currentStage: 4, stageRounds: futureRounds, stageTeams: teams });
   }
 
   return (

@@ -1,6 +1,6 @@
 {
-  "name": "hltv",
-  "version": "0.5.0",
+  "name": "map-stats",
+  "version": "0.5.1",
   "private": true,
   "type": "module",
   "imports": {

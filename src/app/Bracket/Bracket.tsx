@@ -237,7 +237,11 @@ export default function Bracket() {
         />
       </TabsContent>
       <TabsContent value="playoffs">
-        <Playoffs teams={playoffTeams} />
+        <Playoffs
+          teams={playoffTeams}
+          setPicks={setPicks}
+          pickStateRounds={pickState.find((pick) => pick.stage === 4)?.rounds ?? []}
+        />
       </TabsContent>
     </Tabs>
   );
