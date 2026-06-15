@@ -61,18 +61,16 @@ export default function Stage({
   );
 
   useEffect(() => {
-    pickStateRounds.map((round) => {
-      round.matchups.forEach((matchup) =>
-        setResults(String(round.id), matchup.topTeam, matchup.winner),
-      );
+    pickStateRounds.forEach((round) => {
+      round.matchups.forEach((matchup) => setResults(round.id, matchup.topTeam, matchup.winner));
     });
   }, []);
 
-  function setResults(id: string, topTeam: string, winner: string | null) {
+  function setResults(id: number, topTeam: string, winner: string | null) {
     const updateRounds: RoundType[] = rounds.map((round) => {
-      if (round.id === Number(id)) {
+      if (round.id === id) {
         return {
-          id: Number(id),
+          id: id,
           matchups: round.matchups.map((matchup) => {
             if (matchup.topTeam === topTeam) return { ...matchup, winner: winner };
             return matchup;
@@ -83,7 +81,7 @@ export default function Stage({
     });
 
     const futureRounds: RoundType[] = updateRounds.map((round) => {
-      if (round.id === Number(id) + 1) {
+      if (round.id === id + 1) {
         let sections: ("0-0" | "0-1" | "0-2" | "1-0" | "1-1" | "1-2" | "2-0" | "2-1" | "2-2")[];
         switch (round.id) {
           case 2:
@@ -267,7 +265,7 @@ export default function Stage({
           matchups: updatedMatchups.flat(),
         };
       }
-      if (Number(round.id) > Number(id) + 1) {
+      if (round.id > id + 1) {
         return {
           id: round.id,
           matchups: [],
@@ -285,9 +283,10 @@ export default function Stage({
       {[1, 2, 3, 4, 5].map((id) => (
         <Round
           key={id}
-          id={String(id)}
+          id={id}
           matchups={rounds.find((round) => round.id === id)?.matchups ?? []}
           setResults={setResults}
+          teamStats={adjustedTeamStats}
         />
       ))}
       <FinalResults
@@ -298,6 +297,7 @@ export default function Stage({
             (acc, matchup) => acc.concat([matchup.topTeam, matchup.bottomTeam]),
             [],
           )}
+        teamStats={adjustedTeamStats}
       />
     </div>
   );

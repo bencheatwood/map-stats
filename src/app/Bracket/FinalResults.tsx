@@ -1,9 +1,16 @@
-import { Item, ItemContent, ItemMedia, ItemTitle } from "#ui/item";
+import { Item, ItemContent, ItemMedia } from "#ui/item";
 
-import teamStats from "@/scrape/combinedStats.json";
-import { type RoundType } from "@/types";
+import type { CombinedType, RoundType } from "@/types";
 
-export default function FinalResults({ teams, rounds }: { teams: string[]; rounds: RoundType[] }) {
+export default function FinalResults({
+  teams,
+  rounds,
+  teamStats,
+}: {
+  teams: string[];
+  rounds: RoundType[];
+  teamStats: (CombinedType & { seed: number })[];
+}) {
   const sections = ["3-0", "3-1", "3-2", "2-3", "1-3", "0-3"];
 
   const results = teams.map((team) => {
@@ -87,12 +94,12 @@ export default function FinalResults({ teams, rounds }: { teams: string[]; round
         >
           <div className="text-center text-xl">{section}</div>
           {results.map(
-            (result) =>
+            (result, i) =>
               result.record === section && (
                 <Item
                   key={result.team}
                   variant="outline"
-                  className={`w-full min-w-10.5 flex-nowrap select-none ${
+                  className={`@container w-full min-w-10.5 flex-nowrap font-bold select-none ${
                     section === "3-0"
                       ? "bg-green-700"
                       : section === "3-1"
@@ -106,11 +113,14 @@ export default function FinalResults({ teams, rounds }: { teams: string[]; round
                               : "bg-red-700"
                   }`}
                 >
-                  <ItemMedia>
+                  <ItemMedia className="@max-[4rem]:grow">
                     <img src={result.icon} className="size-4" />
                   </ItemMedia>
-                  <ItemContent className="hidden truncate lg:block">
-                    <ItemTitle>{result.team}</ItemTitle>
+                  <ItemContent className="grow truncate @max-[4rem]:hidden">
+                    {result.team}
+                  </ItemContent>
+                  <ItemContent className="flex-none px-1 tabular-nums @max-[2.5rem]:hidden">
+                    {i + 1}
                   </ItemContent>
                 </Item>
               ),

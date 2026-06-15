@@ -8,8 +8,7 @@ import { Item, ItemContent, ItemMedia } from "#ui/item";
 import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "#ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#ui/table";
 
-import teamStats from "@/scrape/combinedStats.json";
-import { type CombinedType, type MatchupType } from "@/types";
+import type { CombinedType, MatchupType } from "@/types";
 
 const mapNames = ["Ancient", "Anubis", "Dust2", "Inferno", "Mirage", "Nuke", "Overpass"];
 
@@ -17,36 +16,43 @@ export default function Round({
   id,
   matchups,
   setResults,
+  teamStats,
+  playoffs = false,
 }: {
-  id: string;
+  id: number;
   matchups: MatchupType[];
-  setResults: (arg0: string, arg1: string, arg2: string | null) => void;
+  setResults: (arg0: number, arg1: string, arg2: string | null) => void;
+  teamStats: (CombinedType & { seed: number })[];
+  playoffs?: boolean;
 }) {
-  let sections: ("0-0" | "0-1" | "0-2" | "1-0" | "1-1" | "1-2" | "2-0" | "2-1" | "2-2" | "")[];
+  let sections: ("0-0" | "0-1" | "0-2" | "1-0" | "1-1" | "1-2" | "2-0" | "2-1" | "2-2")[];
   switch (id) {
-    case "1":
+    case 1:
       sections = ["0-0"];
       break;
-    case "2":
-      sections = ["1-0", "0-1"];
+    case 2:
+      sections = playoffs ? ["1-0"] : ["1-0", "0-1"];
       break;
-    case "3":
-      sections = ["2-0", "1-1", "0-2"];
+    case 3:
+      sections = playoffs ? ["2-0"] : ["2-0", "1-1", "0-2"];
       break;
-    case "4":
+    case 4:
       sections = ["2-1", "1-2"];
       break;
-    case "5":
-      sections = ["2-2"];
-      break;
     default:
-      sections = [""];
+      sections = ["2-2"];
       break;
   }
   return (
     <div className="h-full w-full min-w-15 select-none">
       <div className="mb-4 text-center text-lg md:text-2xl">
-        {id.length > 1 ? id : `Round ${id}`}
+        {playoffs
+          ? id === 1
+            ? "Quarter Finals"
+            : id === 2
+              ? "Semi Finals"
+              : "Grand Final"
+          : `Round ${id}`}
       </div>
       <div className="h-full place-content-center space-y-8">
         {sections.map(
@@ -89,10 +95,18 @@ function Matchup({
   topTeam: string;
   bottomTeam: string;
   winner: string | null;
-  id: string;
-  setResults: (arg0: string, arg1: string, arg2: string | null) => void;
-  topStats: CombinedType | undefined;
-  bottomStats: CombinedType | undefined;
+  id: number;
+  setResults: (arg0: number, arg1: string, arg2: string | null) => void;
+  topStats:
+    | (CombinedType & {
+        seed: number;
+      })
+    | undefined;
+  bottomStats:
+    | (CombinedType & {
+        seed: number;
+      })
+    | undefined;
 }) {
   const [selectTopTeam, setSelectTopTeam] = useState<boolean>(winner === topTeam);
   const [selectBottomTeam, setSelectBottomTeam] = useState<boolean>(winner === bottomTeam);
@@ -127,7 +141,7 @@ function Matchup({
 
   return (
     <div className="md:flex">
-      <div className="w-full min-w-10.5 space-y-1">
+      <div className="@container w-full min-w-10.5 space-y-1">
         <Item
           className={`w-full cursor-pointer flex-nowrap select-none ${selectTopTeam ? "text-foreground/90 bg-green-700/80 font-bold hover:bg-green-700/70" : "bg-secondary-foreground/40 hover:bg-secondary-foreground/35 text-primary-foreground font-semibold"}`}
           onClick={() => {
@@ -136,23 +150,29 @@ function Matchup({
             if (selectBottomTeam) setSelectBottomTeam(false);
           }}
         >
-          <ItemMedia>
+          <ItemMedia className="@max-[6rem]:grow">
             <img src={topStats?.icon} className="size-4" />
           </ItemMedia>
-          <ItemContent className="hidden truncate lg:block">{topTeam}</ItemContent>
+          <ItemContent className="grow truncate @max-[6rem]:hidden">{topTeam}</ItemContent>
+          <ItemContent className="flex-none px-1 tabular-nums @max-[4.5rem]:hidden">
+            {topStats?.seed}
+          </ItemContent>
         </Item>
         <Item
-          className={`w-full min-w-10.5 cursor-pointer flex-nowrap select-none ${selectBottomTeam ? "text-foreground/90 bg-green-700/80 font-bold hover:bg-green-700/70" : "bg-secondary-foreground/40 hover:bg-secondary-foreground/35 text-primary-foreground font-semibold"}`}
+          className={`w-full cursor-pointer flex-nowrap select-none ${selectBottomTeam ? "text-foreground/90 bg-green-700/80 font-bold hover:bg-green-700/70" : "bg-secondary-foreground/40 hover:bg-secondary-foreground/35 text-primary-foreground font-semibold"}`}
           onClick={() => {
             setResults(id, topTeam, selectBottomTeam ? null : bottomTeam);
             setSelectBottomTeam(!selectBottomTeam);
             if (selectTopTeam) setSelectTopTeam(false);
           }}
         >
-          <ItemMedia>
+          <ItemMedia className="@max-[6rem]:grow">
             <img src={bottomStats?.icon} className="size-4" />
           </ItemMedia>
-          <ItemContent className="hidden truncate lg:block">{bottomTeam}</ItemContent>
+          <ItemContent className="grow truncate @max-[6rem]:hidden">{bottomTeam}</ItemContent>
+          <ItemContent className="flex-none px-1 tabular-nums @max-[4.5rem]:hidden">
+            {bottomStats?.seed}
+          </ItemContent>
         </Item>
       </div>
       {topStats && bottomStats && (
