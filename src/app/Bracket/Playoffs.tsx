@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Round from "./Round";
 import teamStats from "@/scrape/combinedStats.json";
@@ -55,6 +55,12 @@ export default function Playoffs({
   const adjustedTeamStats = teams.map((team, i) =>
     Object.assign(teamStats.find((teamStat) => teamStat.name === team)!, { seed: i + 1 }),
   );
+
+  useEffect(() => {
+    pickStateRounds.forEach((round) => {
+      round.matchups.forEach((matchup) => setResults(round.id, matchup.topTeam, matchup.winner));
+    });
+  }, []);
 
   function setResults(id: number, topTeam: string, winner: string | null) {
     const updateRounds: RoundType[] = rounds.map((round) => {

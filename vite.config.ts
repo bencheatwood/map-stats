@@ -147,13 +147,6 @@ export default defineConfig({
   },
   run: {
     tasks: {
-      build: {
-        command: "vp build",
-        dependsOn: ["tsgo", "check"],
-      },
-      check: {
-        command: "vp check --fix",
-      },
       tsgo: {
         command: "tsgo -b",
       },

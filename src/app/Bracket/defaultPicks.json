@@ -464,48 +464,252 @@
                         "bottomTeam": "FUT",
                         "section": "0-0",
                         "topTeam": "Vitality",
-                        "winner": null
+                        "winner": "Vitality"
                     },
                     {
                         "bottomTeam": "Spirit",
                         "section": "0-0",
                         "topTeam": "Natus Vincere",
-                        "winner": null
+                        "winner": "Spirit"
                     },
                     {
                         "bottomTeam": "G2",
                         "section": "0-0",
                         "topTeam": "Falcons",
-                        "winner": null
+                        "winner": "Falcons"
                     },
                     {
                         "bottomTeam": "BetBoom",
                         "section": "0-0",
                         "topTeam": "The MongolZ",
-                        "winner": null
+                        "winner": "BetBoom"
                     },
                     {
                         "bottomTeam": "9z",
                         "section": "0-0",
                         "topTeam": "PARIVISION",
-                        "winner": null
+                        "winner": "9z"
                     },
                     {
                         "bottomTeam": "Monte",
                         "section": "0-0",
                         "topTeam": "Aurora",
-                        "winner": null
+                        "winner": "Aurora"
                     },
                     {
                         "bottomTeam": "B8",
                         "section": "0-0",
                         "topTeam": "FURIA",
-                        "winner": null
+                        "winner": "FURIA"
                     },
                     {
                         "bottomTeam": "Legacy",
                         "section": "0-0",
                         "topTeam": "MOUZ",
+                        "winner": "MOUZ"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "matchups": [
+                    {
+                        "bottomTeam": "9z",
+                        "section": "1-0",
+                        "topTeam": "Vitality",
+                        "winner": "9z"
+                    },
+                    {
+                        "bottomTeam": "BetBoom",
+                        "section": "1-0",
+                        "topTeam": "Falcons",
+                        "winner": "BetBoom"
+                    },
+                    {
+                        "bottomTeam": "Spirit",
+                        "section": "1-0",
+                        "topTeam": "Aurora",
+                        "winner": "Spirit"
+                    },
+                    {
+                        "bottomTeam": "MOUZ",
+                        "section": "1-0",
+                        "topTeam": "FURIA",
+                        "winner": "FURIA"
+                    },
+                    {
+                        "bottomTeam": "Legacy",
+                        "section": "0-1",
+                        "topTeam": "Natus Vincere",
+                        "winner": "Natus Vincere"
+                    },
+                    {
+                        "bottomTeam": "B8",
+                        "section": "0-1",
+                        "topTeam": "The MongolZ",
+                        "winner": "The MongolZ"
+                    },
+                    {
+                        "bottomTeam": "Monte",
+                        "section": "0-1",
+                        "topTeam": "PARIVISION",
+                        "winner": "Monte"
+                    },
+                    {
+                        "bottomTeam": "G2",
+                        "section": "0-1",
+                        "topTeam": "FUT",
+                        "winner": "G2"
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "matchups": [
+                    {
+                        "bottomTeam": "9z",
+                        "section": "2-0",
+                        "topTeam": "Spirit",
+                        "winner": "Spirit"
+                    },
+                    {
+                        "bottomTeam": "FURIA",
+                        "section": "2-0",
+                        "topTeam": "BetBoom",
+                        "winner": "FURIA"
+                    },
+                    {
+                        "bottomTeam": "Monte",
+                        "section": "1-1",
+                        "topTeam": "Falcons",
+                        "winner": "Falcons"
+                    },
+                    {
+                        "bottomTeam": "G2",
+                        "section": "1-1",
+                        "topTeam": "Aurora",
+                        "winner": "Aurora"
+                    },
+                    {
+                        "bottomTeam": "MOUZ",
+                        "section": "1-1",
+                        "topTeam": "Vitality",
+                        "winner": "Vitality"
+                    },
+                    {
+                        "bottomTeam": "The MongolZ",
+                        "section": "1-1",
+                        "topTeam": "Natus Vincere",
+                        "winner": "Natus Vincere"
+                    },
+                    {
+                        "bottomTeam": "Legacy",
+                        "section": "0-2",
+                        "topTeam": "PARIVISION",
+                        "winner": "Legacy"
+                    },
+                    {
+                        "bottomTeam": "FUT",
+                        "section": "0-2",
+                        "topTeam": "B8",
+                        "winner": "FUT"
+                    }
+                ]
+            },
+            {
+                "id": 4,
+                "matchups": [
+                    {
+                        "bottomTeam": "Vitality",
+                        "section": "2-1",
+                        "topTeam": "BetBoom",
+                        "winner": "Vitality"
+                    },
+                    {
+                        "bottomTeam": "Falcons",
+                        "section": "2-1",
+                        "topTeam": "Natus Vincere",
+                        "winner": "Falcons"
+                    },
+                    {
+                        "bottomTeam": "9z",
+                        "section": "2-1",
+                        "topTeam": "Aurora",
+                        "winner": "Aurora"
+                    },
+                    {
+                        "bottomTeam": "FUT",
+                        "section": "1-2",
+                        "topTeam": "MOUZ",
+                        "winner": "FUT"
+                    },
+                    {
+                        "bottomTeam": "Legacy",
+                        "section": "1-2",
+                        "topTeam": "G2",
+                        "winner": "G2"
+                    },
+                    {
+                        "bottomTeam": "Monte",
+                        "section": "1-2",
+                        "topTeam": "The MongolZ",
+                        "winner": "The MongolZ"
+                    }
+                ]
+            },
+            {
+                "id": 5,
+                "matchups": [
+                    {
+                        "bottomTeam": "FUT",
+                        "section": "2-2",
+                        "topTeam": "BetBoom",
+                        "winner": "BetBoom"
+                    },
+                    {
+                        "bottomTeam": "The MongolZ",
+                        "section": "2-2",
+                        "topTeam": "9z",
+                        "winner": "9z"
+                    },
+                    {
+                        "bottomTeam": "G2",
+                        "section": "2-2",
+                        "topTeam": "Natus Vincere",
+                        "winner": "G2"
+                    }
+                ]
+            }
+        ],
+        "stage": 3
+    },
+    {
+        "rounds": [
+            {
+                "id": 1,
+                "matchups": [
+                    {
+                        "bottomTeam": "G2",
+                        "section": "0-0",
+                        "topTeam": "Spirit",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "Falcons",
+                        "section": "0-0",
+                        "topTeam": "Vitality",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "BetBoom",
+                        "section": "0-0",
+                        "topTeam": "Aurora",
+                        "winner": null
+                    },
+                    {
+                        "bottomTeam": "9z",
+                        "section": "0-0",
+                        "topTeam": "FURIA",
                         "winner": null
                     }
                 ]
@@ -517,20 +721,8 @@
             {
                 "id": 3,
                 "matchups": []
-            },
-            {
-                "id": 4,
-                "matchups": []
-            },
-            {
-                "id": 5,
-                "matchups": []
             }
         ],
-        "stage": 3
-    },
-    {
-        "rounds": [],
         "stage": 4
     }
 ]

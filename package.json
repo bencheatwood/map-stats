@@ -1,6 +1,6 @@
 {
   "name": "map-stats",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "type": "module",
   "imports": {
@@ -11,6 +11,7 @@
     "#hooks/*": "./src/hooks/*.ts"
   },
   "scripts": {
+    "build": "vp build",
     "version": "pn i --lockfile-only && git add .",
     "postversion": "git push --follow-tags",
     "patch": "pn version patch -no-git-checks -m ",

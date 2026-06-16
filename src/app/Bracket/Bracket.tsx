@@ -85,8 +85,13 @@ export default function Bracket() {
   useEffect(() => {
     setTimeout(() => {
       setStage("stage2");
-      setTimeout(() => setStage("stage3"), 10);
-      setTimeout(() => setLoading(false), 10);
+      setTimeout(() => {
+        setStage("stage3");
+        setTimeout(() => {
+          setStage("playoffs");
+          setTimeout(() => setLoading(false), 10);
+        }, 10);
+      }, 10);
     }, 10);
   }, []);
 
