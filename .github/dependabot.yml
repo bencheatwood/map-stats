@@ -4,9 +4,3 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    target-branch: "gh-pages"
-    schedule:
-      interval: "weekly"
