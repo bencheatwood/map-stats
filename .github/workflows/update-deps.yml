@@ -1,0 +1,60 @@
+name: Update pnpm deps
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "40 20 * * 1"
+      timezone: "America/New_York"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  pnpm-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm and dependencies
+        uses: pnpm/setup@v1
+        with:
+          cache: true
+          install: true
+
+      - name: Check for dependency updates and generate PR body
+        run: |
+          echo "### Available Package Updates" > /tmp/body.txt
+          echo "\`\`\`text" >> /tmp/body.txt
+
+          LATEST_PNPM=$(npm view pnpm version)
+          CURRENT_PNPM=$(grep -E '"packageManager"' package.json | sed -E 's|.*pnpm@([^"'"'"']*)["'"'"'].*|\1|' | xargs)
+          if [ "$CURRENT_PNPM" != "$LATEST_PNPM" ] && [ -n "$CURRENT_PNPM" ]; then
+            echo -e "pnpm \n$CURRENT_PNPM ➡️ $LATEST_PNPM\n" >> /tmp/body.txt
+          fi
+
+          CURRENT_PACQUET=$(grep -E '@pnpm/pacquet' pnpm-workspace.yaml | sed -E 's|.*:[[:space:]]*["'"'"']?([^"'"'"']*)["'"'"']?|\1|' | xargs)
+          LATEST_PACQUET=$(npm view @pnpm/pacquet version)
+          sed -i -E "s|([\"']?@pnpm/pacquet[\"']?\s*:\s*).*|\1$LATEST_PACQUET|g" pnpm-workspace.yaml
+
+          pnpm outdated --format list >> /tmp/outdated.txt || true
+
+          sed -i "/Installing config dependencies.../d" /tmp/outdated.txt
+          sed -i -E "s|Installed config dependencies: @pnpm/pacquet@(.*)|@pnpm/pacquet\n$CURRENT_PACQUET => \1\n|g" /tmp/outdated.txt
+
+          sed -i "s/=>/➡️/g" /tmp/outdated.txt
+          cat /tmp/outdated.txt >> /tmp/body.txt
+          echo "\`\`\`" >> /tmp/body.txt
+
+      - name: Install updates
+        run: |
+          pnpm self-update
+          pnpm update --latest
+
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: actions
+          commit-message: "chore(deps): update packages"
+          title: "Update package deps"
+          body-path: /tmp/body.txt
