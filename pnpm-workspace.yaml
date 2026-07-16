@@ -19,8 +19,3 @@ overrides:
   vitest: "npm:@voidzero-dev/vite-plus-test@latest"
 
 trustLockfile: true
-
-configDependencies:
-  "@pnpm/pacquet": 0.11.10
-
-virtualStoreDirMaxLength: 60
