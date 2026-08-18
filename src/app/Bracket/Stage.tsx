@@ -22,7 +22,10 @@ export default function Stage({
   pickStateRounds: RoundType[];
 }) {
   const adjustedTeamStats = teams.map((team, i) =>
-    Object.assign(teamStats.find((teamStat) => teamStat.name === team)!, { seed: i + 1 }),
+    Object.assign(
+      teamStats.find((teamStat) => teamStat.name === team)!,
+      { seed: i + 1 },
+    ),
   );
   const [rounds, setRounds] = useState<RoundType[]>(
     pickStateRounds.length > 0

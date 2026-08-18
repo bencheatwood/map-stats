@@ -53,7 +53,10 @@ export default function Playoffs({
   );
 
   const adjustedTeamStats = teams.map((team, i) =>
-    Object.assign(teamStats.find((teamStat) => teamStat.name === team)!, { seed: i + 1 }),
+    Object.assign(
+      teamStats.find((teamStat) => teamStat.name === team)!,
+      { seed: i + 1 },
+    ),
   );
 
   useEffect(() => {

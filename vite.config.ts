@@ -42,12 +42,7 @@ export default defineConfig({
       builtin: true,
     },
     ignorePatterns: ["dist/**"],
-    jsPlugins: [
-      {
-        name: "react-compiler",
-        specifier: "eslint-plugin-react-compiler",
-      },
-    ],
+    jsPlugins: [],
     options: { typeAware: true, typeCheck: true },
     overrides: [
       {
@@ -80,8 +75,8 @@ export default defineConfig({
         files: ["src/components/ui/*"],
         rules: {
           "no-shadow": "off",
-          "react-compiler/react-compiler": "off",
           "react/only-export-components": "off",
+          "react/react-compiler": "off",
           "unicorn/prefer-global-this": "off",
         },
       },
@@ -102,8 +97,8 @@ export default defineConfig({
       "oxc/no-map-spread": "warn",
       "prefer-destructuring": "warn",
       "promise/no-nesting": "warn",
-      "react-compiler/react-compiler": "error",
       "react/no-array-index-key": "allow",
+      "react/react-compiler": "error",
       "react/rules-of-hooks": "error",
       "sort-keys": "warn",
       "typescript/ban-ts-comment": "error",

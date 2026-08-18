@@ -10,12 +10,34 @@ minimumReleaseAge: 2880
 minimumReleaseAgeExclude:
   - "@voidzero-dev/vite-plus*"
   - vite-plus
-  - pnpm
+  - "@oxfmt/*"
+  - "@oxlint/*"
+  - oxfmt
+  - oxlint
+  - "@voidzero-dev/*"
+  - oxlint-tsgolint
+  - "@oxlint-tsgolint/*"
+  - vitest
+  - "@vitest/*"
+  - "@oxc-project/*"
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 2880
-
-overrides:
-  vite: "npm:@voidzero-dev/vite-plus-core@latest"
-  vitest: "npm:@voidzero-dev/vite-plus-test@latest"
-
 trustLockfile: true
+trustPolicyExclude:
+  - pnpm
+
+catalog:
+  vite: npm:@voidzero-dev/vite-plus-core@0.2.9
+  vite-plus: 0.2.9
+overrides:
+  vite: "catalog:"
+peerDependencyRules:
+  allowAny:
+    - vite
+  allowedVersions:
+    vite: "*"
+
+update:
+  githubActions: true
+
+minimumReleaseAgeExcludePrune: true
