@@ -1,8 +1,7 @@
 import path from "path";
 
-import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
-import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react";
 import { defineConfig, lazyPlugins } from "vite-plus";
 
 export default defineConfig({
@@ -128,13 +127,7 @@ export default defineConfig({
       "vars-on-top": "warn",
     },
   },
-  plugins: lazyPlugins(() => [
-    babel({
-      presets: [reactCompilerPreset()],
-    }),
-    react(),
-    tailwindcss(),
-  ]),
+  plugins: lazyPlugins(() => [react({ compiler: true }), tailwindcss()]),
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./src"),
