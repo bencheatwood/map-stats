@@ -89,7 +89,9 @@ export default function Bracket() {
         setStage("stage3");
         setTimeout(() => {
           setStage("playoffs");
-          setTimeout(() => setLoading(false), 10);
+          setTimeout(() => {
+            setLoading(false);
+          }, 10);
         }, 10);
       }, 10);
     }, 10);
@@ -109,7 +111,7 @@ export default function Bracket() {
         const match = round.matchups.find(
           (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
         );
-        if (match && match.winner === team) {
+        if (match?.winner === team) {
           return acc + 1;
         }
         return acc;
@@ -129,18 +131,18 @@ export default function Bracket() {
         const match = stageRound.matchups.find(
           (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
         );
-        if (match && match.winner) {
+        if (match?.winner) {
           acc.push(match.topTeam === team ? match.bottomTeam : match.topTeam);
         }
         return acc;
       }, []);
 
       return {
-        buchholzOpp: buchholzOpp,
+        buchholzOpp,
         buchholzSelf: wins - losses,
         icon: teamStats.find((stat) => stat.name === team)?.icon,
         record: `${wins}-${losses}`,
-        team: team,
+        team,
       };
     });
 

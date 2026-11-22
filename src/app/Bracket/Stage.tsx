@@ -65,7 +65,9 @@ export default function Stage({
 
   useEffect(() => {
     pickStateRounds.forEach((round) => {
-      round.matchups.forEach((matchup) => setResults(round.id, matchup.topTeam, matchup.winner));
+      round.matchups.forEach((matchup) => {
+        setResults(round.id, matchup.topTeam, matchup.winner);
+      });
     });
   }, []);
 
@@ -73,9 +75,9 @@ export default function Stage({
     const updateRounds: RoundType[] = rounds.map((round) => {
       if (round.id === id) {
         return {
-          id: id,
+          id,
           matchups: round.matchups.map((matchup) => {
-            if (matchup.topTeam === topTeam) return { ...matchup, winner: winner };
+            if (matchup.topTeam === topTeam) return { ...matchup, winner };
             return matchup;
           }),
         };
@@ -106,7 +108,7 @@ export default function Stage({
             const match = updateRound.matchups.find(
               (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
             );
-            if (updateRound.id < round.id && match && match.winner === team) {
+            if (updateRound.id < round.id && match?.winner === team) {
               return acc + 1;
             }
             return acc;
@@ -126,17 +128,17 @@ export default function Stage({
             const match = updateRound.matchups.find(
               (matchup) => matchup.topTeam === team || matchup.bottomTeam === team,
             );
-            if (updateRound.id < round.id && match && match.winner) {
+            if (updateRound.id < round.id && match?.winner) {
               acc.push(match.topTeam === team ? match.bottomTeam : match.topTeam);
             }
             return acc;
           }, []);
 
           return {
-            buchholzOpp: buchholzOpp,
+            buchholzOpp,
             buchholzSelf: wins - losses,
             record: `${wins}-${losses}`,
-            team: team,
+            team,
           };
         });
 
@@ -167,7 +169,7 @@ export default function Stage({
             .map((team) => {
               return {
                 bottomTeam: "",
-                section: section,
+                section,
                 topTeam: team.team,
                 winner: null,
               };
@@ -210,7 +212,7 @@ export default function Stage({
                     ) {
                       bottomTeams.delete(bottomTeam);
                       Object.assign(tempMatchup, {
-                        bottomTeam: bottomTeam,
+                        bottomTeam,
                       });
                       break;
                     } else {
@@ -278,7 +280,7 @@ export default function Stage({
     });
 
     setRounds(futureRounds);
-    setPicks({ currentStage: currentStage, stageRounds: futureRounds, stageTeams: teams });
+    setPicks({ currentStage, stageRounds: futureRounds, stageTeams: teams });
   }
 
   return (

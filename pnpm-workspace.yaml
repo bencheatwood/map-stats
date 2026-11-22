@@ -20,7 +20,7 @@ minimumReleaseAgeExclude:
   - "@vitest/*"
   - "@oxc-project/*"
   - tsrs
-  - '@tsrs/*'
+  - "@tsrs/*"
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 2880
 trustLockfile: true
@@ -32,7 +32,7 @@ catalog:
   vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
   vite-plus: 1.7.0
 overrides:
-  vite@*: 'catalog:'
+  vite@*: "catalog:"
 
 update:
   githubActions: true

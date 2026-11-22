@@ -61,7 +61,9 @@ export default function Playoffs({
 
   useEffect(() => {
     pickStateRounds.forEach((round) => {
-      round.matchups.forEach((matchup) => setResults(round.id, matchup.topTeam, matchup.winner));
+      round.matchups.forEach((matchup) => {
+        setResults(round.id, matchup.topTeam, matchup.winner);
+      });
     });
   }, []);
 
@@ -69,9 +71,9 @@ export default function Playoffs({
     const updateRounds: RoundType[] = rounds.map((round) => {
       if (round.id === id) {
         return {
-          id: id,
+          id,
           matchups: round.matchups.map((matchup) => {
-            if (matchup.topTeam === topTeam) return { ...matchup, winner: winner };
+            if (matchup.topTeam === topTeam) return { ...matchup, winner };
             return matchup;
           }),
         };
@@ -104,13 +106,13 @@ export default function Playoffs({
                 ? [
                     {
                       bottomTeam: winningTeams[1],
-                      section: section,
+                      section,
                       topTeam: winningTeams[0],
                       winner: null,
                     },
                     {
                       bottomTeam: winningTeams[3],
-                      section: section,
+                      section,
                       topTeam: winningTeams[2],
                       winner: null,
                     },
@@ -120,7 +122,7 @@ export default function Playoffs({
                 ? [
                     {
                       bottomTeam: winningTeams[1],
-                      section: section,
+                      section,
                       topTeam: winningTeams[0],
                       winner: null,
                     },

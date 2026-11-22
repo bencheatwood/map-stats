@@ -31,9 +31,9 @@ async function getHLTVRanks(page: Page): Promise<HLTVRank[]> {
       if (!name || !rank || !icon) continue;
 
       results.push({
-        icon: icon,
-        name: name,
-        rank: rank,
+        icon,
+        name,
+        rank,
       });
     }
 
@@ -60,8 +60,8 @@ async function getValveRanks(page: Page): Promise<Rank[]> {
       if (!name || !rank) continue;
 
       results.push({
-        name: name,
-        rank: rank,
+        name,
+        rank,
       });
     }
 

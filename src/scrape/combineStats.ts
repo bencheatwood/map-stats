@@ -39,13 +39,13 @@ const combine = () => {
     const matchStats = teamMatchStats.find((teamMatch) => team.name === teamMatch.name)!.stats;
 
     return {
-      hltv: hltv,
-      icon: icon,
+      hltv,
+      icon,
       id: team.id,
-      mapStats: mapStats,
-      matchStats: matchStats,
-      name: name,
-      valve: valve,
+      mapStats,
+      matchStats,
+      name,
+      valve,
     };
   });
 

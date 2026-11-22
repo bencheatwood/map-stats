@@ -34,7 +34,7 @@ function setupAutoUpdate() {
         },
       );
       const html = await response.text();
-      const match = html.match(/src=["'](?:[^"']*\/)?assets\/(index-[a-zA-Z0-9_-]+\.js)["']/);
+      const match = /src=["'](?:[^"']*\/)?assets\/(index-[a-zA-Z0-9_-]+\.js)["']/.exec(html);
 
       if (currentScriptSrc && match && currentScriptSrc !== match[1]) {
         if (!toast.getToasts().length) {
@@ -44,7 +44,9 @@ function setupAutoUpdate() {
                 className="absolute right-4 border-blue-400 bg-transparent hover:bg-transparent dark:border-blue-500/80 dark:hover:bg-transparent"
                 variant="outline"
                 size="icon-xs"
-                onClick={() => globalThis.location.reload()}
+                onClick={() => {
+                  globalThis.location.reload();
+                }}
               >
                 <RotateCw />
               </Button>
@@ -59,9 +61,7 @@ function setupAutoUpdate() {
   };
 
   setInterval(() => {
-    Promise.resolve(checkForUpdates()).catch((e: Error) =>
-      console.error("Update check failed:", e.message),
-    );
+    void checkForUpdates();
   }, interval);
 }
 
