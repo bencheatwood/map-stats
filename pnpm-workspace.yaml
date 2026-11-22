@@ -15,27 +15,24 @@ minimumReleaseAgeExclude:
   - oxfmt
   - oxlint
   - "@voidzero-dev/*"
-  - oxlint-tsgolint
   - "@oxlint-tsgolint/*"
   - vitest
   - "@vitest/*"
   - "@oxc-project/*"
+  - tsrs
+  - '@tsrs/*'
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 2880
 trustLockfile: true
 trustPolicyExclude:
   - pnpm
+  - tsrs@7.1.0-beta.tsrs2
 
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.9
-  vite-plus: 0.2.9
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
+  vite-plus: 1.7.0
 overrides:
-  vite: "catalog:"
-peerDependencyRules:
-  allowAny:
-    - vite
-  allowedVersions:
-    vite: "*"
+  vite@*: 'catalog:'
 
 update:
   githubActions: true

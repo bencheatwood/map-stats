@@ -1,0 +1,64 @@
+name: Create Release
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: releases
+  cancel-in-progress: false
+
+jobs:
+  create-release:
+    if: "${{ github.event.pull_request.merged == true && github.event.pull_request.title == 'chore(release): Merge release' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Get new version
+        id: version
+        run: |
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Parse CHANGELOG.md
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+
+          const version = process.env.VERSION;
+          const changelog = fs.readFileSync("CHANGELOG.md", "utf8");
+          const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+          const heading = new RegExp(
+            `^(#{1,6})\\s+${escape(version)}\\s*$`,
+            "gm",
+          );
+          const match = heading.exec(changelog);
+
+          if (!match) {
+            throw new Error(`No CHANGELOG.md entry found for ${version}`);
+          }
+
+          const depth = match[1].length;
+          const nextHeading = new RegExp(`^#{${depth}}\\s`, "gm");
+          nextHeading.lastIndex = heading.lastIndex;
+
+          const next = nextHeading.exec(changelog);
+          const notes = changelog
+            .slice(heading.lastIndex, next?.index)
+            .trim();
+
+          fs.writeFileSync("RELEASE-NOTES.md", `${notes}\n`);
+          NODE
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ steps.version.outputs.version }}" -F "RELEASE-NOTES.md"

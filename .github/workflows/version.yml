@@ -1,0 +1,58 @@
+name: Create Version PR
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".changeset/*.md"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: releases
+  cancel-in-progress: false
+
+jobs:
+  check-changeset:
+    runs-on: ubuntu-latest
+    outputs:
+      pending: ${{ steps.check.outputs.pending }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - id: check
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require('fs');
+
+            const pending = fs
+              .readdirSync('.changeset')
+              .some(f => f.endsWith('.md'));
+
+            core.setOutput('pending', pending);
+
+  version-pr:
+    needs: check-changeset
+    if: needs.check-changeset.outputs.pending == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install pnpm and dependencies
+        uses: pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1 # v3.2.0
+        with:
+          cache: true
+
+      - name: Build project
+        run: pn build
+
+      - name: Create Release Pull Request
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          commit-message: "chore(release): Version update"
+          pr-title: "chore(release): Merge release"
