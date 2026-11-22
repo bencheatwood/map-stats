@@ -2,4 +2,4 @@
 "map-stats": patch
 ---
 
-Initialize changesets
+Initialize changesets and setup workflows
